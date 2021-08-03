@@ -5,7 +5,7 @@
         "device": "*",
         "TilemapPath": "github:unsignedarduino/tilemappath#59623a16b911ea351fe9f6dfab130bbbc01a2426",
         "Stats": "github:UnsignedArduino/Stats#9102333e1ca6cbaf8a979ceb252274b2f09b9005",
-        "Notifications": "github:unsignedarduino/notifications#9beb5b533ce313bbff859e3adc09a08dce1f6bdc",
+        "Notifications": "github:unsignedarduino/notifications#cd76e090c9a5c04ef0346d4fab71b147ee8c3db7",
         "Timers": "github:microsoft/arcade-timers#v1.1.0",
         "tilemaps": "github:microsoft/pxt-tilemaps#v1.11.0",
         "arcade-sprite-data": "github:microsoft/arcade-sprite-data#v0.1.0"
