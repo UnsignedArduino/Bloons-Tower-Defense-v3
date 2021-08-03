@@ -1,3 +1,6 @@
+function on_land_tile () {
+    return land_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
+}
 function update_cursor () {
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
@@ -7,9 +10,18 @@ function set_variables () {
     in_round = false
     round_number = 1
 }
+function make_cursor_icons () {
+    sprite_land_icon = sprites.create(assets.image`land_icon`, SpriteKind.Player)
+    sprite_water_icon = sprites.create(assets.image`water_icon`, SpriteKind.Player)
+    sprite_land_icon.setFlag(SpriteFlag.Ghost, true)
+    sprite_water_icon.setFlag(SpriteFlag.Ghost, true)
+    sprite_land_icon.z = 100
+    sprite_water_icon.z = 100
+    update_cursor_icons()
+}
 function enable_cursor_movement (en: boolean) {
     if (en) {
-        controller.moveSprite(sprite_cursor_pointer, 75, 75)
+        controller.moveSprite(sprite_cursor_pointer, 100, 100)
     } else {
         controller.moveSprite(sprite_cursor_pointer, 0, 0)
     }
@@ -69,11 +81,14 @@ function make_cursor () {
     sprite_cursor = sprites.create(assets.image`cursor`, SpriteKind.Player)
     sprite_cursor_pointer = sprites.create(assets.image`cursor_pointer`, SpriteKind.Player)
     enable_cursor_movement(true)
+    sprite_cursor.setFlag(SpriteFlag.Ghost, true)
     sprite_cursor_pointer.setFlag(SpriteFlag.StayInScreen, true)
     sprite_cursor_pointer.setFlag(SpriteFlag.GhostThroughWalls, true)
-    sprite_cursor.setFlag(SpriteFlag.Ghost, true)
+    sprite_cursor.z = 90
+    sprite_cursor_pointer.z = 100
     update_cursor()
     scene.cameraFollowSprite(sprite_cursor_pointer)
+    make_cursor_icons()
 }
 function game_init () {
     finish_tilemap()
@@ -86,19 +101,40 @@ function set_map (index: number) {
         set_walk_in_the_park_map()
     }
 }
+function on_water_tile () {
+    return water_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
+}
 function finish_map_loading (index: number) {
     if (index == 0) {
         finish_walk_in_the_park_map()
     }
 }
+function update_cursor_icons () {
+    sprite_land_icon.left = sprite_cursor.right + 2
+    sprite_land_icon.top = sprite_cursor.top
+    sprite_water_icon.left = sprite_cursor.right + 2
+    sprite_water_icon.top = sprite_land_icon.bottom + 2
+    if (on_land_tile()) {
+        sprite_land_icon.setImage(assets.image`land_icon`)
+    } else {
+        sprite_land_icon.setImage(assets.image`no_land_icon`)
+    }
+    if (on_water_tile()) {
+        sprite_water_icon.setImage(assets.image`water_icon`)
+    } else {
+        sprite_water_icon.setImage(assets.image`no_water_icon`)
+    }
+}
 let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
-let land_tiles: Image[] = []
+let sprite_water_icon: Sprite = null
+let sprite_land_icon: Sprite = null
 let round_number = 0
 let in_round = false
-let sprite_cursor_pointer: Sprite = null
 let sprite_cursor: Sprite = null
+let sprite_cursor_pointer: Sprite = null
+let land_tiles: Image[] = []
 let in_game = false
 stats.turnStats(true)
 set_variables()
@@ -112,4 +148,5 @@ timer.background(function () {
 })
 game.onUpdate(function () {
     update_cursor()
+    update_cursor_icons()
 })

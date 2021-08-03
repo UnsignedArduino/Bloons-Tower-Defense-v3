@@ -26,6 +26,46 @@ f . . . f 1 f . . .
             case "cursor_pointer":return img`
 f 
 `;
+            case "}`]nu6_?v:Q3m{?1eUGY":
+            case "no_water_icon":return img`
+. f f f f f . 
+f 2 1 1 1 2 f 
+f 1 2 1 2 1 f 
+f 1 1 2 1 1 f 
+f 9 2 9 2 9 f 
+f 2 9 9 9 2 f 
+. f f f f f . 
+`;
+            case "3CpGi/9luAzTz=v":
+            case "land_icon":return img`
+. f f f f f . 
+f 1 1 1 1 1 f 
+f 1 1 1 1 1 f 
+f 7 7 7 7 7 f 
+f e e e e e f 
+f e e e e e f 
+. f f f f f . 
+`;
+            case "zb_8mmAOq@7S$^Bw~":
+            case "no_land_icon":return img`
+. f f f f f . 
+f 2 1 1 1 2 f 
+f 1 2 1 2 1 f 
+f 7 7 2 7 7 f 
+f e 2 e 2 e f 
+f 2 e e e 2 f 
+. f f f f f . 
+`;
+            case "gLxqT1|SaNU+{%":
+            case "water_icon":return img`
+. f f f f f . 
+f 1 1 1 1 1 f 
+f 1 1 1 1 1 f 
+f 1 1 1 1 1 f 
+f 9 9 9 9 9 f 
+f 9 9 9 9 9 f 
+. f f f f f . 
+`;
         }
         return null;
     })

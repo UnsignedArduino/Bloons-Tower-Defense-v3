@@ -6,7 +6,8 @@
         "TilemapPath": "github:unsignedarduino/tilemappath#59623a16b911ea351fe9f6dfab130bbbc01a2426",
         "Stats": "github:UnsignedArduino/Stats#9102333e1ca6cbaf8a979ceb252274b2f09b9005",
         "Notifications": "github:unsignedarduino/notifications#f82c06a13635b8c8a1e9b31d5ed3d6e2b44d111b",
-        "Timers": "github:microsoft/arcade-timers#v1.1.0"
+        "Timers": "github:microsoft/arcade-timers#v1.1.0",
+        "tilemaps": "github:microsoft/pxt-tilemaps#v1.11.0"
     },
     "files": [
         "main.blocks",
