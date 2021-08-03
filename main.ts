@@ -11,30 +11,34 @@ function set_variables () {
     round_number = 1
     enable_controls = true
 }
+function start_round () {
+    in_round = true
+    timer.background(function () {
+        timer.background(function () {
+            Notification.cancelNotification()
+            Notification.waitForNotificationFinish()
+            Notification.notify("Starting round " + round_number)
+        })
+        run_round(round_number_to_round_code(round_number), 100)
+        round_number += 1
+        in_round = false
+        timer.background(function () {
+            Notification.cancelNotification()
+            Notification.waitForNotificationFinish()
+            Notification.notify("Round " + (round_number - 1) + " finished!")
+        })
+    })
+}
+function set_game_variables () {
+    game_lose_on_0_lives = true
+}
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (enable_controls) {
         if (in_game) {
             if (controller.A.isPressed()) {
                 if (!(in_round)) {
-                    in_round = true
-                    timer.background(function () {
-                        timer.background(function () {
-                            Notification.cancelNotification()
-                            Notification.waitForNotificationFinish()
-                            Notification.notify("Starting round " + round_number)
-                        })
-                        run_round(round_number_to_round_code(round_number), 100)
-                        round_number += 1
-                        in_round = false
-                        timer.background(function () {
-                            Notification.cancelNotification()
-                            Notification.waitForNotificationFinish()
-                            Notification.notify("Round " + (round_number - 1) + " finished!")
-                        })
-                    })
+                    start_round()
                 }
-            } else {
-            	
             }
         }
     }
@@ -210,8 +214,10 @@ function run_round (round_code: string, delay: number) {
     }
 }
 info.onLifeZero(function () {
-    pause(0)
-    game.over(false)
+    if (game_lose_on_0_lives) {
+        pause(0)
+        game.over(false)
+    }
 })
 function finish_map_loading (index: number) {
     if (index == 0) {
@@ -255,6 +261,7 @@ let water_tiles: Image[] = []
 let round_code = ""
 let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
+let game_lose_on_0_lives = false
 let enable_controls = false
 let round_number = 0
 let in_round = false
