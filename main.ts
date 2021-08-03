@@ -9,6 +9,13 @@ function enable_cursor_movement (en: boolean) {
         controller.moveSprite(sprite_cursor_pointer, 0, 0)
     }
 }
+function finish_tilemap () {
+    for (let tile of [sprites.builtin.forestTiles0, sprites.castle.rock0, sprites.castle.rock1]) {
+        for (let location of tiles.getTilesByType(tile)) {
+            tiles.setWallAt(location, true)
+        }
+    }
+}
 function finish_walk_in_the_park_map () {
     land_tiles = [assets.tile`grass`, sprites.castle.tileGrass1, sprites.castle.tileGrass3, sprites.castle.tileGrass2]
     water_tiles = [
@@ -64,6 +71,7 @@ function make_cursor () {
     scene.cameraFollowSprite(sprite_cursor_pointer)
 }
 function game_init () {
+    finish_tilemap()
     make_cursor()
 }
 function set_map (index: number) {
