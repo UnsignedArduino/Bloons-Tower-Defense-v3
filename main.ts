@@ -179,7 +179,8 @@ function run_round (round_code: string, delay: number) {
     }
 }
 info.onLifeZero(function () {
-	
+    pause(0)
+    game.over(false)
 })
 function finish_map_loading (index: number) {
     if (index == 0) {
@@ -188,20 +189,7 @@ function finish_map_loading (index: number) {
 }
 TilemapPath.onEventWithHandlerArgs(function (sprite) {
     info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
-    if (info.life() <= 0 && !(sprite_camera)) {
-        enable_controls = false
-        enable_cursor_movement(false)
-        sprite_camera = sprites.create(assets.image`blank`, SpriteKind.Player)
-        sprite_camera.x = sprite_cursor_pointer.x
-        sprite_camera.y = sprite_cursor_pointer.y
-        sprite_camera.setFlag(SpriteFlag.Ghost, true)
-        scene.cameraFollowSprite(sprite_camera)
-        sprite_camera.follow(sprite, 100)
-        pause(3000)
-        game.over(false)
-    } else {
-        sprite.destroy()
-    }
+    sprite.destroy()
 })
 function update_cursor_icons () {
     sprite_land_icon.left = sprite_cursor.right + 2
@@ -230,7 +218,6 @@ function summon_bloon (hp: number) {
 }
 let sprite_bloon: Sprite = null
 let path_index = 0
-let sprite_camera: Sprite = null
 let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
@@ -249,6 +236,11 @@ set_map(0)
 finish_map_loading(0)
 game_init()
 in_game = true
+timer.background(function () {
+    Notification.cancelNotification()
+    Notification.waitForNotificationFinish()
+    Notification.notify("Hold A and tap B to start round")
+})
 game.onUpdate(function () {
     update_cursor()
     update_cursor_icons()
