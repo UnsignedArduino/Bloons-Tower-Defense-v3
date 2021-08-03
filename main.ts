@@ -13,6 +13,7 @@ function set_variables () {
     in_round = false
     round_number = 1
     enable_controls = true
+    set_game_variables()
 }
 function start_round () {
     in_round = true
