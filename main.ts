@@ -73,6 +73,8 @@ function make_cursor () {
 function game_init () {
     finish_tilemap()
     make_cursor()
+    info.setScore(0)
+    info.setLife(100)
 }
 function set_map (index: number) {
     if (index == 0) {
