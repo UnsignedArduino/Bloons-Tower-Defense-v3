@@ -1,0 +1,17 @@
+{
+    "JWx@oFVVe#czFjG%4e3D": {
+        "data": "hwQKABAAAAD///////8PAPARERER8QAAAB8REREPAAAA8BER8Q8AAAAAHxER8Q8AAADwEfEf8Q8AAAAf8fAf8QAAAPDxAPAPAAAAAP8AAAAAAAAA8AAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "cursor"
+    },
+    "68th#X[:^@J:pK6;!p@%": {
+        "data": "hwQBAAEAAAAPAAAA",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "cursor_pointer"
+    },
+    "*": {
+        "mimeType": "image/x-mkcd-f4",
+        "dataEncoding": "base64",
+        "namespace": "myImages"
+    }
+}
