@@ -92,6 +92,7 @@ let water_tiles: Image[] = []
 let land_tiles: Image[] = []
 let sprite_cursor_pointer: Sprite = null
 let sprite_cursor: Sprite = null
+stats.turnStats(true)
 set_map(0)
 finish_map_loading(0)
 game_init()
