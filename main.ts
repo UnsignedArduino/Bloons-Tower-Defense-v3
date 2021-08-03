@@ -1,3 +1,6 @@
+namespace StatusBarKind {
+    export const Status = StatusBarKind.create()
+}
 function on_land_tile () {
     return land_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
 }
@@ -19,7 +22,9 @@ function start_round () {
             Notification.waitForNotificationFinish()
             Notification.notify("Starting round " + round_number)
         })
+        sprite_round_status.setFlag(SpriteFlag.Invisible, false)
         run_round(round_number_to_round_code(round_number), 100)
+        sprite_round_status.setFlag(SpriteFlag.Invisible, true)
         round_number += 1
         in_round = false
         timer.background(function () {
@@ -110,6 +115,16 @@ function round_number_to_round_code (number: number) {
     }
     return round_code
 }
+function make_round_status_bar () {
+    sprite_round_status = statusbars.create(scene.screenWidth() - 4, 3, StatusBarKind.Status)
+    sprite_round_status.setColor(1, 15)
+    sprite_round_status.setBarBorder(1, 15)
+    sprite_round_status.setStatusBarFlag(StatusBarFlag.InvertFillDirection, true)
+    sprite_round_status.left = 2
+    sprite_round_status.bottom = scene.screenHeight() - 2
+    sprite_round_status.setFlag(SpriteFlag.RelativeToCamera, true)
+    sprite_round_status.setFlag(SpriteFlag.Invisible, true)
+}
 function finish_tilemap () {
     for (let tile of [sprites.builtin.forestTiles0, sprites.castle.rock0, sprites.castle.rock1]) {
         for (let location of tiles.getTilesByType(tile)) {
@@ -177,6 +192,7 @@ function make_cursor () {
 function game_init () {
     finish_tilemap()
     make_cursor()
+    make_round_status_bar()
     info.setScore(0)
     info.setLife(100)
 }
@@ -200,7 +216,10 @@ function on_water_tile () {
     return water_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
 }
 function run_round (round_code: string, delay: number) {
+    sprite_round_status.max = round_code.length
+    sprite_round_status.value = round_code.length
     for (let index = 0; index <= round_code.length - 1; index++) {
+        sprite_round_status.value += -1
         if (round_code.charAt(index) == "a") {
             summon_bloon(1)
         } else if (round_code.charAt(index) == "b") {
@@ -262,6 +281,7 @@ let round_code = ""
 let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
 let game_lose_on_0_lives = false
+let sprite_round_status: StatusBarSprite = null
 let enable_controls = false
 let round_number = 0
 let in_round = false
