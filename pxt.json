@@ -2,13 +2,16 @@
     "name": "Bloons Tower Defense v3",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "TilemapPath": "github:unsignedarduino/tilemappath#59623a16b911ea351fe9f6dfab130bbbc01a2426"
     },
     "files": [
         "main.blocks",
         "main.ts",
         "README.md",
-        "assets.json"
+        "assets.json",
+        "tilemap.g.jres",
+        "tilemap.g.ts"
     ],
     "testFiles": [
         "test.ts"
