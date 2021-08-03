@@ -29,25 +29,30 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "water_icon"
     },
-    "0hyT7$QtX/$dNo~Naxo5": {
-        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiIgAAAAAAICIiIgAAAAAiIiIiAgAAACIiIiIi/wD/IiIiIiIA/wAiIiIiAgAAACAiIiIAAAAAACIiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-        "mimeType": "image/x-mkcd-f4",
-        "displayName": "hp_1_bloon"
-    },
-    "jCOKDI+Qd!s1;`BOR70#": {
-        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREQAAAAAAEBEREQAAAAARHxERAQAAAPERERER/wD/8RH/8REA/wAR/xERAQAAABAREREAAAAAABERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-        "mimeType": "image/x-mkcd-f4",
-        "displayName": "hp_unknown_bloon"
-    },
     "?}0AAvFnmx#eGe": {
         "data": "hwQBAAEAAAAAAAAA",
         "mimeType": "image/x-mkcd-f4",
         "displayName": "blank"
     },
+    "0hyT7$QtX/$dNo~Naxo5": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiIgAAAAAAICIiIgAAAAAiIiIiAgAAACIiIiIi/wD/IiIiIiIA/wAiIiIiAgAAACAiIiIAAAAAACIiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "red_bloon"
+    },
     "T[Q?Zt}2Nd)kH$R[!{}i": {
         "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACZmQAAAAAAkJmZmQAAAACZmZmZCQAAAJmZmZmZ/wD/mZmZmZkA/wCZmZmZCQAAAJCZmZkAAAAAAJmZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
         "mimeType": "image/x-mkcd-f4",
-        "displayName": "hp_2_bloon"
+        "displayName": "blue_bloon"
+    },
+    "jCOKDI+Qd!s1;`BOR70#": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREQAAAAAAEBEREQAAAAARHxERAQAAAPERERER/wD/8RH/8REA/wAR/xERAQAAABAREREAAAAAABERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "test_bloon"
+    },
+    ";BMcMv5%X]t737mmG@:*": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB3dwAAAAAAcHd3dwAAAAB3d3d3BwAAAHd3d3d3/wD/d3d3d3cA/wB3d3d3BwAAAHB3d3cAAAAAAHd3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "green_bloon"
     },
     "*": {
         "mimeType": "image/x-mkcd-f4",

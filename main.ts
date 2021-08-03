@@ -50,11 +50,13 @@ function make_cursor_icons () {
 }
 function bloon_hp_to_image (hp: number) {
     if (hp == 1) {
-        return assets.image`hp_1_bloon`
+        return assets.image`red_bloon`
     } else if (hp == 2) {
-        return assets.image`hp_2_bloon`
+        return assets.image`blue_bloon`
+    } else if (hp == 3) {
+        return assets.image`green_bloon`
     } else {
-        return assets.image`hp_unknown_bloon`
+        return assets.image`test_bloon`
     }
 }
 function enable_cursor_movement (en: boolean) {
@@ -65,19 +67,44 @@ function enable_cursor_movement (en: boolean) {
     }
 }
 function round_number_to_round_code (number: number) {
+    round_code = ""
     if (number == 1) {
-        return "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  "
+        for (let index = 0; index < 20; index++) {
+            round_code = "" + round_code + "a  "
+        }
     } else if (number == 2) {
-        return "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "" + ""
+        for (let index = 0; index < 30; index++) {
+            round_code = "" + round_code + "a  "
+        }
     } else if (number == 3) {
-        return "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  "
+        for (let index = 0; index < 50; index++) {
+            round_code = "" + round_code + "a  "
+        }
     } else if (number == 4) {
-        return "a a a a a a a a a a " + "b  b  b  b  b  " + "a a a a a a a a a a " + "b  b  b  b  b  " + ""
+        for (let index = 0; index < 2; index++) {
+            for (let index = 0; index < 10; index++) {
+                round_code = "" + round_code + "a "
+            }
+            for (let index = 0; index < 5; index++) {
+                round_code = "" + round_code + "b  "
+            }
+        }
     } else if (number == 5) {
-        return "b  b  b  b  b  " + "b  b  b  b  b  " + "a  a  a  a  a  a  a  a  a  a  " + "b  b  b  b  b  " + "b  b  b  b  b  "
+        for (let index = 0; index < 10; index++) {
+            round_code = "" + round_code + "b  "
+        }
+        for (let index = 0; index < 10; index++) {
+            round_code = "" + round_code + "a "
+        }
+        for (let index = 0; index < 20; index++) {
+            round_code = "" + round_code + "b  "
+        }
     } else {
-        return ""
+        for (let index = 0; index < number * 15; index++) {
+            round_code = "" + round_code + "c "
+        }
     }
+    return round_code
 }
 function finish_tilemap () {
     for (let tile of [sprites.builtin.forestTiles0, sprites.castle.rock0, sprites.castle.rock1]) {
@@ -156,11 +183,13 @@ function set_map (index: number) {
 }
 function bloon_hp_to_speed (hp: number) {
     if (hp == 1) {
-        return 50
+        return 50 * 1
     } else if (hp == 2) {
-        return 65
+        return 50 * 1.4
+    } else if (hp == 3) {
+        return 50 * 1.8
     } else {
-        return 10
+        return 50 * 1
     }
 }
 function on_water_tile () {
@@ -172,6 +201,8 @@ function run_round (round_code: string, delay: number) {
             summon_bloon(1)
         } else if (round_code.charAt(index) == "b") {
             summon_bloon(2)
+        } else if (round_code.charAt(index) == "c") {
+            summon_bloon(3)
         } else {
             pause(delay)
         }
@@ -221,6 +252,7 @@ let path_index = 0
 let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
+let round_code = ""
 let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
 let enable_controls = false
