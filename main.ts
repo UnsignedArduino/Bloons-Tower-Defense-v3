@@ -9,7 +9,36 @@ function set_variables () {
     in_game = false
     in_round = false
     round_number = 1
+    enable_controls = true
 }
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (enable_controls) {
+        if (in_game) {
+            if (controller.A.isPressed()) {
+                if (!(in_round)) {
+                    in_round = true
+                    timer.background(function () {
+                        timer.background(function () {
+                            Notification.cancelNotification()
+                            Notification.waitForNotificationFinish()
+                            Notification.notify("Starting round " + round_number)
+                        })
+                        run_round(round_number_to_round_code(round_number), 100)
+                        round_number += 1
+                        in_round = false
+                        timer.background(function () {
+                            Notification.cancelNotification()
+                            Notification.waitForNotificationFinish()
+                            Notification.notify("Round " + (round_number - 1) + " finished!")
+                        })
+                    })
+                }
+            } else {
+            	
+            }
+        }
+    }
+})
 function make_cursor_icons () {
     sprite_land_icon = sprites.create(assets.image`land_icon`, SpriteKind.Player)
     sprite_water_icon = sprites.create(assets.image`water_icon`, SpriteKind.Player)
@@ -19,11 +48,35 @@ function make_cursor_icons () {
     sprite_water_icon.z = 100
     update_cursor_icons()
 }
+function bloon_hp_to_image (hp: number) {
+    if (hp == 1) {
+        return assets.image`hp_1_bloon`
+    } else if (hp == 2) {
+        return assets.image`hp_2_bloon`
+    } else {
+        return assets.image`hp_unknown_bloon`
+    }
+}
 function enable_cursor_movement (en: boolean) {
     if (en) {
         controller.moveSprite(sprite_cursor_pointer, 100, 100)
     } else {
         controller.moveSprite(sprite_cursor_pointer, 0, 0)
+    }
+}
+function round_number_to_round_code (number: number) {
+    if (number == 1) {
+        return "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  "
+    } else if (number == 2) {
+        return "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "" + ""
+    } else if (number == 3) {
+        return "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  " + "a  a  a  a  a  a  a  a  a  a  "
+    } else if (number == 4) {
+        return "a a a a a a a a a a " + "b  b  b  b  b  " + "a a a a a a a a a a " + "b  b  b  b  b  " + ""
+    } else if (number == 5) {
+        return "b  b  b  b  b  " + "b  b  b  b  b  " + "a  a  a  a  a  a  a  a  a  a  " + "b  b  b  b  b  " + "b  b  b  b  b  "
+    } else {
+        return ""
     }
 }
 function finish_tilemap () {
@@ -101,14 +154,55 @@ function set_map (index: number) {
         set_walk_in_the_park_map()
     }
 }
+function bloon_hp_to_speed (hp: number) {
+    if (hp == 1) {
+        return 50
+    } else if (hp == 2) {
+        return 65
+    } else {
+        return 10
+    }
+}
 function on_water_tile () {
     return water_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
 }
+function run_round (round_code: string, delay: number) {
+    for (let index = 0; index <= round_code.length - 1; index++) {
+        if (round_code.charAt(index) == "a") {
+            summon_bloon(1)
+        } else if (round_code.charAt(index) == "b") {
+            summon_bloon(2)
+        } else {
+            pause(delay)
+        }
+        pause(delay)
+    }
+}
+info.onLifeZero(function () {
+	
+})
 function finish_map_loading (index: number) {
     if (index == 0) {
         finish_walk_in_the_park_map()
     }
 }
+TilemapPath.onEventWithHandlerArgs(function (sprite) {
+    info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
+    if (info.life() <= 0 && !(sprite_camera)) {
+        enable_controls = false
+        enable_cursor_movement(false)
+        sprite_camera = sprites.create(assets.image`blank`, SpriteKind.Player)
+        sprite_camera.x = sprite_cursor_pointer.x
+        sprite_camera.y = sprite_cursor_pointer.y
+        sprite_camera.setFlag(SpriteFlag.Ghost, true)
+        scene.cameraFollowSprite(sprite_camera)
+        sprite_camera.follow(sprite, 100)
+        pause(3000)
+        game.over(false)
+    } else {
+        sprite.destroy()
+    }
+})
 function update_cursor_icons () {
     sprite_land_icon.left = sprite_cursor.right + 2
     sprite_land_icon.top = sprite_cursor.top
@@ -125,11 +219,24 @@ function update_cursor_icons () {
         sprite_water_icon.setImage(assets.image`no_water_icon`)
     }
 }
+function summon_bloon (hp: number) {
+    path_index = randint(0, spawn_locations.length - 1)
+    sprite_bloon = sprites.create(bloon_hp_to_image(hp), SpriteKind.Enemy)
+    tiles.placeOnTile(sprite_bloon, spawn_locations[path_index])
+    sprites.setDataNumber(sprite_bloon, "health", hp)
+    timer.background(function () {
+        TilemapPath.follow_path(sprite_bloon, bloon_paths[path_index], bloon_hp_to_speed(hp))
+    })
+}
+let sprite_bloon: Sprite = null
+let path_index = 0
+let sprite_camera: Sprite = null
 let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
 let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
+let enable_controls = false
 let round_number = 0
 let in_round = false
 let sprite_cursor: Sprite = null
@@ -142,10 +249,6 @@ set_map(0)
 finish_map_loading(0)
 game_init()
 in_game = true
-timer.background(function () {
-    Notification.waitForNotificationFinish()
-    Notification.notify("Hold A and tap B to start the round!")
-})
 game.onUpdate(function () {
     update_cursor()
     update_cursor_icons()
