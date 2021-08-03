@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const Tower = SpriteKind.create()
+}
 namespace StatusBarKind {
     export const Status = StatusBarKind.create()
 }
@@ -41,10 +44,10 @@ function set_game_variables () {
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (enable_controls) {
         if (in_game) {
-            if (controller.A.isPressed()) {
-                if (!(in_round)) {
-                    start_round()
-                }
+            if (is_overlapping_kind(sprite_cursor_pointer, SpriteKind.Tower)) {
+            	
+            } else {
+                new_tower_menu()
             }
         }
     }
@@ -54,8 +57,8 @@ function make_cursor_icons () {
     sprite_water_icon = sprites.create(assets.image`water_icon`, SpriteKind.Player)
     sprite_land_icon.setFlag(SpriteFlag.Ghost, true)
     sprite_water_icon.setFlag(SpriteFlag.Ghost, true)
-    sprite_land_icon.z = 100
-    sprite_water_icon.z = 100
+    sprite_land_icon.z = 50
+    sprite_water_icon.z = 50
     update_cursor_icons()
 }
 function bloon_hp_to_image (hp: number) {
@@ -184,18 +187,32 @@ function make_cursor () {
     sprite_cursor.setFlag(SpriteFlag.Ghost, true)
     sprite_cursor_pointer.setFlag(SpriteFlag.StayInScreen, true)
     sprite_cursor_pointer.setFlag(SpriteFlag.GhostThroughWalls, true)
-    sprite_cursor.z = 90
-    sprite_cursor_pointer.z = 100
+    sprite_cursor.z = 40
+    sprite_cursor_pointer.z = 50
     update_cursor()
     scene.cameraFollowSprite(sprite_cursor_pointer)
     make_cursor_icons()
+}
+function wait_for_menu_select (close: boolean) {
+    menu_selected = false
+    while (!(menu_selected)) {
+        pause(0)
+    }
+    if (close) {
+        blockMenu.closeMenu()
+    }
 }
 function game_init () {
     finish_tilemap()
     make_cursor()
     make_round_status_bar()
+    blockMenu.setColors(1, 15)
     info.setScore(0)
     info.setLife(100)
+}
+function new_water_tower () {
+    blockMenu.showMenu([], MenuStyle.Grid, MenuLocation.FullScreen)
+    wait_for_menu_select(true)
 }
 function set_map (index: number) {
     if (index == 0) {
@@ -212,6 +229,19 @@ function bloon_hp_to_speed (hp: number) {
     } else {
         return 50 * 1
     }
+}
+function new_tower_menu () {
+    enable_controls = false
+    enable_cursor_movement(false)
+    if (on_water_tile()) {
+        new_water_tower()
+    } else if (on_land_tile()) {
+        new_land_tower()
+    } else {
+        scene.cameraShake(2, 100)
+    }
+    enable_controls = true
+    enable_cursor_movement(true)
 }
 function on_water_tile () {
     return water_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
@@ -233,6 +263,15 @@ function run_round (round_code: string, delay: number) {
         pause(delay)
     }
 }
+controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (enable_controls) {
+        if (in_game) {
+            if (!(in_round)) {
+                start_round()
+            }
+        }
+    }
+})
 info.onLifeZero(function () {
     if (game_lose_on_0_lives) {
         pause(0)
@@ -248,6 +287,14 @@ TilemapPath.onEventWithHandlerArgs(function (sprite) {
     info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
     sprite.destroy()
 })
+function is_overlapping_kind (target: Sprite, kind: number) {
+    for (let sprite of sprites.allOfKind(kind)) {
+        if (target.overlapsWith(sprite)) {
+            return true
+        }
+    }
+    return false
+}
 function update_cursor_icons () {
     sprite_land_icon.left = sprite_cursor.right + 2
     sprite_land_icon.top = sprite_cursor.top
@@ -264,6 +311,10 @@ function update_cursor_icons () {
         sprite_water_icon.setImage(assets.image`no_water_icon`)
     }
 }
+function new_land_tower () {
+    blockMenu.showMenu([], MenuStyle.Grid, MenuLocation.FullScreen)
+    wait_for_menu_select(true)
+}
 function summon_bloon (hp: number) {
     path_index = randint(0, spawn_locations.length - 1)
     sprite_bloon = sprites.create(bloon_hp_to_image(hp), SpriteKind.Enemy)
@@ -273,8 +324,12 @@ function summon_bloon (hp: number) {
         TilemapPath.follow_path(sprite_bloon, bloon_paths[path_index], bloon_hp_to_speed(hp))
     })
 }
+blockMenu.onMenuOptionSelected(function (option, index) {
+    menu_selected = true
+})
 let sprite_bloon: Sprite = null
 let path_index = 0
+let menu_selected = false
 let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
@@ -299,7 +354,7 @@ in_game = true
 timer.background(function () {
     Notification.cancelNotification()
     Notification.waitForNotificationFinish()
-    Notification.notify("Hold A and tap B to start round")
+    Notification.notify("Press menu to start the round")
 })
 game.onUpdate(function () {
     update_cursor()
