@@ -2,6 +2,11 @@ function update_cursor () {
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
 }
+function set_variables () {
+    in_game = false
+    in_round = false
+    round_number = 1
+}
 function enable_cursor_movement (en: boolean) {
     if (en) {
         controller.moveSprite(sprite_cursor_pointer, 75, 75)
@@ -90,12 +95,21 @@ let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
 let land_tiles: Image[] = []
+let round_number = 0
+let in_round = false
 let sprite_cursor_pointer: Sprite = null
 let sprite_cursor: Sprite = null
+let in_game = false
 stats.turnStats(true)
+set_variables()
 set_map(0)
 finish_map_loading(0)
 game_init()
+in_game = true
+timer.background(function () {
+    Notification.waitForNotificationFinish()
+    Notification.notify("Hold A and tap B to start the round!")
+})
 game.onUpdate(function () {
     update_cursor()
 })
