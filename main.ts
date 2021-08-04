@@ -17,6 +17,7 @@ function set_variables () {
     round_number = 1
     enable_controls = true
     set_game_variables()
+    tower_id = 0
 }
 function start_round () {
     in_round = true
@@ -207,11 +208,22 @@ function game_init () {
     make_cursor()
     make_round_status_bar()
     blockMenu.setColors(1, 15)
-    info.setScore(0)
+    info.setScore(100)
     info.setLife(100)
 }
+function summon_dart_monkey (x: number, y: number) {
+    sprite_tower = sprites.create(assets.image`dart_monkey_left`, SpriteKind.Tower)
+    sprites.setDataNumber(sprite_tower, "id", tower_id)
+    tower_id += 1
+    sprites.setDataString(sprite_tower, "type", "dart_monkey")
+    sprites.setDataBoolean(sprite_tower, "facing_left", true)
+    set_firing_data(sprite_tower, 500, -100, 100, 30, 1.3)
+    set_range_data(sprite_tower, 32, 8, 80, 50, 1.2)
+    set_dart_data(sprite_tower, 0, 1, 1, 5, 20, 1.4)
+    sprite_tower.setPosition(x, y)
+}
 function new_water_tower () {
-    blockMenu.showMenu([], MenuStyle.Grid, MenuLocation.FullScreen)
+    blockMenu.showMenu([], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
 }
 function set_map (index: number) {
@@ -230,6 +242,13 @@ function bloon_hp_to_speed (hp: number) {
         return 50 * 1
     }
 }
+function set_firing_data (tower: Sprite, basic2: number, inc: number, best: number, price: number, multiplier: number) {
+    sprites.setDataNumber(tower, "firing_speed_base", basic2)
+    sprites.setDataNumber(tower, "firing_speed_inc", inc)
+    sprites.setDataNumber(tower, "firing_speed_best", best)
+    sprites.setDataNumber(tower, "firing_speed_price", price)
+    sprites.setDataNumber(tower, "firing_speed_price_mul", multiplier)
+}
 function new_tower_menu () {
     enable_controls = false
     enable_cursor_movement(false)
@@ -238,7 +257,7 @@ function new_tower_menu () {
     } else if (on_land_tile()) {
         new_land_tower()
     } else {
-        scene.cameraShake(2, 100)
+        game.showLongText("Not a valid spot!", DialogLayout.Bottom)
     }
     enable_controls = true
     enable_cursor_movement(true)
@@ -278,10 +297,25 @@ info.onLifeZero(function () {
         game.over(false)
     }
 })
+function set_dart_data (tower: Sprite, _type: number, basic2: number, inc: number, best: number, price: number, multiplier: number) {
+    sprites.setDataNumber(tower, "dart_type", _type)
+    sprites.setDataNumber(tower, "dart_health_base", basic2)
+    sprites.setDataNumber(tower, "dart_health_inc", inc)
+    sprites.setDataNumber(tower, "dart_health_best", best)
+    sprites.setDataNumber(tower, "dart_health_price", price)
+    sprites.setDataNumber(tower, "dart_health_price_mul", multiplier)
+}
 function finish_map_loading (index: number) {
     if (index == 0) {
         finish_walk_in_the_park_map()
     }
+}
+function set_range_data (tower: Sprite, basic2: number, inc: number, best: number, price: number, multiplier: number) {
+    sprites.setDataNumber(tower, "range_base", basic2)
+    sprites.setDataNumber(tower, "range_inc", inc)
+    sprites.setDataNumber(tower, "range_best", best)
+    sprites.setDataNumber(tower, "range_price", price)
+    sprites.setDataNumber(tower, "range_price_mul", multiplier)
 }
 TilemapPath.onEventWithHandlerArgs(function (sprite) {
     info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
@@ -312,8 +346,14 @@ function update_cursor_icons () {
     }
 }
 function new_land_tower () {
-    blockMenu.showMenu([], MenuStyle.Grid, MenuLocation.FullScreen)
+    blockMenu.showMenu(["Dart monkey (25$)"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
+    if (blockMenu.selectedMenuIndex() == 0 && info.score() >= 25) {
+        info.changeScoreBy(-25)
+        summon_dart_monkey(sprite_cursor_pointer.x, sprite_cursor_pointer.y)
+    } else {
+        game.showLongText("Not enough money!", DialogLayout.Bottom)
+    }
 }
 function summon_bloon (hp: number) {
     path_index = randint(0, spawn_locations.length - 1)
@@ -329,6 +369,7 @@ blockMenu.onMenuOptionSelected(function (option, index) {
 })
 let sprite_bloon: Sprite = null
 let path_index = 0
+let sprite_tower: Sprite = null
 let menu_selected = false
 let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
@@ -338,6 +379,7 @@ let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
 let game_lose_on_0_lives = false
 let sprite_round_status: StatusBarSprite = null
+let tower_id = 0
 let enable_controls = false
 let round_number = 0
 let in_round = false

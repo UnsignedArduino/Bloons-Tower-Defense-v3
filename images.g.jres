@@ -54,6 +54,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "green_bloon"
     },
+    "_|5T==Sd94h9|G!o`7w7": {
+        "data": "hwQQABAAAAAAAMDMDwAAAAAA3P3/AP//AP/t/dv/v/3w3e393e/e/e/d3f3/7/7/7/3f/O/+7v/v3d3d/+7v/u/e3V317v/+7+7uXvXuv/3w7u7u7u+//QD/vfvu///7APDdzf////8AAM/8AAD//wAAAAAA7+7/AAAAAAD//w8AAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "dart_monkey_left"
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",
