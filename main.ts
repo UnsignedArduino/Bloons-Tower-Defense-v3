@@ -49,6 +49,7 @@ function get_overlapping_sprite (target: Sprite, kind: number) {
 }
 function set_game_variables () {
     game_lose_on_0_lives = true
+    lots_of_money = true
     dart_angle_precision = 30
 }
 function update_dart_monkey (tower: Sprite) {
@@ -129,11 +130,29 @@ function tower_right_click (tower: Sprite) {
         tower.destroy()
         info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "total_price") * 0.8))
     } else if (blockMenu.selectedMenuOption().includes("firing delay")) {
-        tower.say("firing speed", 500)
+        if (info.score() >= Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul"))) {
+            tower.startEffect(effects.halo, 500)
+            info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul")) * -1)
+            sprites.changeDataNumberBy(tower, "firing_speed", sprites.readDataNumber(tower, "firing_speed_inc"))
+        } else {
+            game.showLongText("Not enough money!", DialogLayout.Bottom)
+        }
     } else if (blockMenu.selectedMenuOption().includes("range")) {
-        tower.say("range", 500)
+        if (info.score() >= Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul"))) {
+            tower.startEffect(effects.halo, 500)
+            info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul")) * -1)
+            sprites.changeDataNumberBy(tower, "range", sprites.readDataNumber(tower, "range_inc"))
+        } else {
+            game.showLongText("Not enough money!", DialogLayout.Bottom)
+        }
     } else if (blockMenu.selectedMenuOption().includes("piercing")) {
-        tower.say("piercing", 500)
+        if (info.score() >= Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul"))) {
+            tower.startEffect(effects.halo, 500)
+            info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul")) * -1)
+            sprites.changeDataNumberBy(tower, "dart_health", sprites.readDataNumber(tower, "dart_health_inc"))
+        } else {
+            game.showLongText("Not enough money!", DialogLayout.Bottom)
+        }
     }
 }
 function get_farthest_along_path_bloon (tower: Sprite) {
@@ -284,7 +303,11 @@ function game_init () {
     make_round_status_bar()
     initialize_projectiles()
     blockMenu.setColors(1, 15)
-    info.setScore(100)
+    if (lots_of_money) {
+        info.setScore(100000000000000000)
+    } else {
+        info.setScore(100)
+    }
     info.setLife(100)
 }
 function update_tower_image (tower: Sprite, angle: number) {
@@ -494,6 +517,7 @@ let sprite_projectile: Sprite = null
 let target_angle = 0
 let sprite_target: Sprite = null
 let dart_angle_precision = 0
+let lots_of_money = false
 let game_lose_on_0_lives = false
 let sprite_round_status: StatusBarSprite = null
 let tower_id = 0
