@@ -274,8 +274,13 @@ function summon_dart_monkey (x: number, y: number) {
     sprite_tower.z = 20
 }
 function new_water_tower () {
-    blockMenu.showMenu([], MenuStyle.List, MenuLocation.BottomHalf)
+    blockMenu.showMenu(["Cancel"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
+    if (blockMenu.selectedMenuIndex() == 0) {
+        return
+    } else {
+        game.showLongText("Not enough money!", DialogLayout.Bottom)
+    }
 }
 function set_map (index: number) {
     if (index == 0) {
@@ -398,9 +403,11 @@ function update_cursor_icons () {
     }
 }
 function new_land_tower () {
-    blockMenu.showMenu(["Dart monkey (25$)"], MenuStyle.List, MenuLocation.BottomHalf)
+    blockMenu.showMenu(["Cancel", "Dart monkey (25$)"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
-    if (blockMenu.selectedMenuIndex() == 0 && info.score() >= 25) {
+    if (blockMenu.selectedMenuIndex() == 0) {
+        return
+    } else if (blockMenu.selectedMenuIndex() == 1 && info.score() >= 25) {
         info.changeScoreBy(-25)
         summon_dart_monkey(sprite_cursor_pointer.x, sprite_cursor_pointer.y)
     } else {
@@ -419,6 +426,19 @@ function summon_bloon (hp: number) {
 }
 blockMenu.onMenuOptionSelected(function (option, index) {
     menu_selected = true
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    sprites.changeDataNumberBy(sprite, "health", -1)
+    sprites.changeDataNumberBy(otherSprite, "health", -1)
+    if (sprites.readDataNumber(sprite, "health") <= 0) {
+        sprite.destroy()
+    }
+    if (sprites.readDataNumber(otherSprite, "health") <= 0) {
+        otherSprite.destroy()
+        info.changeScoreBy(1)
+    } else {
+        otherSprite.setImage(bloon_hp_to_image(sprites.readDataNumber(otherSprite, "health")))
+    }
 })
 let sprite_bloon: Sprite = null
 let path_index = 0
