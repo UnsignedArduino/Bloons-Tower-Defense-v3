@@ -19,6 +19,19 @@ function set_variables () {
     set_game_variables()
     tower_id = 0
 }
+function show_tower_range (tower: Sprite) {
+    sprite_shader = shader.createImageShaderSprite(image.create(sprites.readDataNumber(tower, "range") * 4, sprites.readDataNumber(tower, "range") * 4), shader.ShadeLevel.One)
+    spriteutils.fillCircle(
+    sprite_shader.image,
+    sprites.readDataNumber(tower, "range") * 2,
+    sprites.readDataNumber(tower, "range") * 2,
+    sprites.readDataNumber(tower, "range"),
+    15
+    )
+    sprite_shader.setPosition(tower.x, tower.y)
+    sprite_shader.z = 5
+    sprites.setDataSprite(tower, "tower_range_shadow", sprite_shader)
+}
 function start_round () {
     in_round = true
     timer.background(function () {
@@ -61,6 +74,7 @@ function update_dart_monkey (tower: Sprite) {
     update_tower_image(tower, spriteutils.radiansToDegrees(target_angle) - 90)
     sprite_projectile = sprites.create(get_projectile_image(sprites.readDataNumber(tower, "dart_type"), spriteutils.radiansToDegrees(target_angle) + 180), SpriteKind.Projectile)
     sprite_projectile.setPosition(tower.x, tower.y)
+    sprite_projectile.z = 20
     sprite_projectile.setFlag(SpriteFlag.DestroyOnWall, true)
     sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(tower, "dart_health"))
     spriteutils.setVelocityAtAngle(sprite_projectile, target_angle, sprites.readDataNumber(tower, "dart_speed"))
@@ -74,7 +88,10 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             enable_controls = false
             enable_cursor_movement(false)
             if (is_overlapping_kind(sprite_cursor_pointer, SpriteKind.Tower)) {
-                tower_right_click(get_overlapping_sprite(sprite_cursor_pointer, SpriteKind.Tower))
+                sprite_tower = get_overlapping_sprite(sprite_cursor_pointer, SpriteKind.Tower)
+                show_tower_range(sprite_tower)
+                tower_right_click(sprite_tower)
+                hide_tower_range(sprite_tower)
             } else {
                 new_tower_menu()
             }
@@ -234,6 +251,9 @@ function finish_tilemap () {
         }
     }
 }
+function hide_tower_range (tower: Sprite) {
+    sprites.readDataSprite(tower, "tower_range_shadow").destroy()
+}
 function finish_walk_in_the_park_map () {
     land_tiles = [assets.tile`grass`, sprites.castle.tileGrass1, sprites.castle.tileGrass3, sprites.castle.tileGrass2]
     water_tiles = [
@@ -337,7 +357,7 @@ function summon_dart_monkey (x: number, y: number) {
     set_range_data(sprite_tower, 32, 8, 80, 50, 1.2)
     set_dart_data(sprite_tower, 0, 1, 1, 5, 20, 1.4, 200)
     sprite_tower.setPosition(x, y)
-    sprite_tower.z = 20
+    sprite_tower.z = 30
 }
 function new_water_tower () {
     blockMenu.showMenu(["Cancel"], MenuStyle.List, MenuLocation.BottomHalf)
@@ -504,7 +524,6 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
 })
 let sprite_bloon: Sprite = null
 let path_index = 0
-let sprite_tower: Sprite = null
 let menu_selected = false
 let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
@@ -515,6 +534,7 @@ let menu_options: string[] = []
 let base_projectile_images: Image[] = []
 let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
+let sprite_tower: Sprite = null
 let projectile_images: Image[][] = []
 let sprite_projectile: Sprite = null
 let target_angle = 0
@@ -523,6 +543,7 @@ let dart_angle_precision = 0
 let lots_of_money = false
 let game_lose_on_0_lives = false
 let sprite_round_status: StatusBarSprite = null
+let sprite_shader: Sprite = null
 let tower_id = 0
 let enable_controls = false
 let round_number = 0

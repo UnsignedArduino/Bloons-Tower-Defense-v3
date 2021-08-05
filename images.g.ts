@@ -66,10 +66,6 @@ f 9 9 9 9 9 f
 f 9 9 9 9 9 f 
 . f f f f f . 
 `;
-            case "?}0AAvFnmx#eGe":
-            case "blank":return img`
-. 
-`;
             case "0hyT7$QtX/$dNo~Naxo5":
             case "red_bloon":return img`
 . . . . . . 2 2 2 2 . . . . . . 
@@ -183,6 +179,10 @@ f f b d f f f 5 5 e e f . . . .
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
+`;
+            case "?}0AAvFnmx#eGe":
+            case "blank":return img`
+. 
 `;
         }
         return null;
