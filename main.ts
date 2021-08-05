@@ -39,9 +39,17 @@ function start_round () {
         })
     })
 }
+function get_overlapping_sprite (target: Sprite, kind: number) {
+    for (let sprite of sprites.allOfKind(kind)) {
+        if (target.overlapsWith(sprite)) {
+            return sprite
+        }
+    }
+    return [][0]
+}
 function set_game_variables () {
     game_lose_on_0_lives = true
-    dart_angle_precision = 20
+    dart_angle_precision = 30
 }
 function update_dart_monkey (tower: Sprite) {
     sprite_target = get_farthest_along_path_bloon(tower)
@@ -62,11 +70,15 @@ function get_projectile_image (_type: number, angle: number) {
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (enable_controls) {
         if (in_game) {
+            enable_controls = false
+            enable_cursor_movement(false)
             if (is_overlapping_kind(sprite_cursor_pointer, SpriteKind.Tower)) {
-            	
+                tower_right_click(get_overlapping_sprite(sprite_cursor_pointer, SpriteKind.Tower))
             } else {
                 new_tower_menu()
             }
+            enable_controls = true
+            enable_cursor_movement(true)
         }
     }
 })
@@ -95,6 +107,18 @@ function bloon_hp_to_image (hp: number) {
         return assets.image`green_bloon`
     } else {
         return assets.image`test_bloon`
+    }
+}
+function tower_right_click (tower: Sprite) {
+    menu_options = ["Cancel"]
+    menu_options.push("Sell for " + Math.round(sprites.readDataNumber(tower, "total_price") * 0.8) + "$")
+    blockMenu.showMenu(menu_options, MenuStyle.List, MenuLocation.BottomHalf)
+    wait_for_menu_select(true)
+    if (blockMenu.selectedMenuIndex() == 0) {
+        return
+    } else if (blockMenu.selectedMenuIndex() == 1) {
+        tower.destroy()
+        info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "total_price") * 0.8))
     }
 }
 function get_farthest_along_path_bloon (tower: Sprite) {
@@ -267,6 +291,7 @@ function summon_dart_monkey (x: number, y: number) {
     tower_id += 1
     sprites.setDataString(sprite_tower, "type", "dart_monkey")
     sprites.setDataBoolean(sprite_tower, "facing_left", true)
+    sprites.setDataNumber(sprite_tower, "total_price", 25)
     set_firing_data(sprite_tower, 500, -100, 100, 30, 1.3)
     set_range_data(sprite_tower, 32, 8, 80, 50, 1.2)
     set_dart_data(sprite_tower, 0, 1, 1, 5, 20, 1.4, 100)
@@ -306,8 +331,6 @@ function set_firing_data (tower: Sprite, basic2: number, inc: number, best: numb
     sprites.setDataNumber(tower, "firing_speed_price_mul", multiplier)
 }
 function new_tower_menu () {
-    enable_controls = false
-    enable_cursor_movement(false)
     if (on_water_tile()) {
         new_water_tower()
     } else if (on_land_tile()) {
@@ -315,8 +338,6 @@ function new_tower_menu () {
     } else {
         game.showLongText("Not a valid spot!", DialogLayout.Bottom)
     }
-    enable_controls = true
-    enable_cursor_movement(true)
 }
 function on_water_tile () {
     return water_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
@@ -449,6 +470,7 @@ let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
 let round_code = ""
 let farthest_along_bloon: Sprite = null
+let menu_options: string[] = []
 let base_projectile_images: Image[] = []
 let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
