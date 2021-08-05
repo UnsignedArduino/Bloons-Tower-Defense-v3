@@ -49,6 +49,7 @@ function update_dart_monkey (tower: Sprite) {
         return
     }
     target_angle = spriteutils.angleFrom(tower, sprite_target)
+    update_tower_image(tower, spriteutils.radiansToDegrees(target_angle) - 90)
     sprite_projectile = sprites.create(get_projectile_image(sprites.readDataNumber(tower, "dart_type"), spriteutils.radiansToDegrees(target_angle) + 180), SpriteKind.Projectile)
     sprite_projectile.setPosition(tower.x, tower.y)
     sprite_projectile.setFlag(SpriteFlag.DestroyOnWall, true)
@@ -246,6 +247,19 @@ function game_init () {
     blockMenu.setColors(1, 15)
     info.setScore(100)
     info.setLife(100)
+}
+function update_tower_image (tower: Sprite, angle: number) {
+    if (angle < -180 || angle > 0) {
+        if (!(sprites.readDataBoolean(tower, "facing_left"))) {
+            sprites.setDataBoolean(tower, "facing_left", true)
+            tower.image.flipX()
+        }
+    } else {
+        if (sprites.readDataBoolean(tower, "facing_left")) {
+            sprites.setDataBoolean(tower, "facing_left", false)
+            tower.image.flipX()
+        }
+    }
 }
 function summon_dart_monkey (x: number, y: number) {
     sprite_tower = sprites.create(assets.image`dart_monkey_left`, SpriteKind.Tower)
