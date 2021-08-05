@@ -49,7 +49,7 @@ function get_overlapping_sprite (target: Sprite, kind: number) {
 }
 function set_game_variables () {
     game_lose_on_0_lives = true
-    lots_of_money = true
+    lots_of_money = false
     dart_angle_precision = 30
 }
 function update_dart_monkey (tower: Sprite) {
@@ -134,6 +134,7 @@ function tower_right_click (tower: Sprite) {
             tower.startEffect(effects.halo, 500)
             info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul")) * -1)
             sprites.changeDataNumberBy(tower, "firing_speed", sprites.readDataNumber(tower, "firing_speed_inc"))
+            sprites.changeDataNumberBy(tower, "total_price", Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul")))
         } else {
             game.showLongText("Not enough money!", DialogLayout.Bottom)
         }
@@ -142,6 +143,7 @@ function tower_right_click (tower: Sprite) {
             tower.startEffect(effects.halo, 500)
             info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul")) * -1)
             sprites.changeDataNumberBy(tower, "range", sprites.readDataNumber(tower, "range_inc"))
+            sprites.changeDataNumberBy(tower, "total_price", Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul")))
         } else {
             game.showLongText("Not enough money!", DialogLayout.Bottom)
         }
@@ -150,6 +152,7 @@ function tower_right_click (tower: Sprite) {
             tower.startEffect(effects.halo, 500)
             info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul")) * -1)
             sprites.changeDataNumberBy(tower, "dart_health", sprites.readDataNumber(tower, "dart_health_inc"))
+            sprites.changeDataNumberBy(tower, "total_price", Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul")))
         } else {
             game.showLongText("Not enough money!", DialogLayout.Bottom)
         }
@@ -209,7 +212,7 @@ function round_number_to_round_code (number: number) {
         }
     } else {
         for (let index = 0; index < number * 15; index++) {
-            round_code = "" + round_code + "c "
+            round_code = "" + round_code + "c"
         }
     }
     return round_code
@@ -332,7 +335,7 @@ function summon_dart_monkey (x: number, y: number) {
     sprites.setDataNumber(sprite_tower, "total_price", 25)
     set_firing_data(sprite_tower, 500, -100, 100, 30, 1.3)
     set_range_data(sprite_tower, 32, 8, 80, 50, 1.2)
-    set_dart_data(sprite_tower, 0, 1, 1, 5, 20, 1.4, 100)
+    set_dart_data(sprite_tower, 0, 1, 1, 5, 20, 1.4, 200)
     sprite_tower.setPosition(x, y)
     sprite_tower.z = 20
 }
