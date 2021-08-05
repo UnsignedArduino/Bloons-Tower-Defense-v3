@@ -112,6 +112,15 @@ function bloon_hp_to_image (hp: number) {
 function tower_right_click (tower: Sprite) {
     menu_options = ["Cancel"]
     menu_options.push("Sell for " + Math.round(sprites.readDataNumber(tower, "total_price") * 0.8) + "$")
+    if (sprites.readDataNumber(tower, "firing_speed") > sprites.readDataNumber(tower, "firing_speed_best")) {
+        menu_options.push("Decrease firing delay to " + (sprites.readDataNumber(tower, "firing_speed") + sprites.readDataNumber(tower, "firing_speed_inc")) + " ms for $" + Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul")) + "")
+    }
+    if (sprites.readDataNumber(tower, "range") < sprites.readDataNumber(tower, "range_best")) {
+        menu_options.push("Increase range to " + (sprites.readDataNumber(tower, "range") + sprites.readDataNumber(tower, "range_inc")) + " px for $" + Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul")) + "")
+    }
+    if (sprites.readDataNumber(tower, "dart_health") < sprites.readDataNumber(tower, "dart_health_best")) {
+        menu_options.push("Increase piercing to " + (sprites.readDataNumber(tower, "dart_health") + sprites.readDataNumber(tower, "dart_health_inc")) + " layers for $" + Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul")) + "")
+    }
     blockMenu.showMenu(menu_options, MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
     if (blockMenu.selectedMenuIndex() == 0) {
@@ -119,6 +128,12 @@ function tower_right_click (tower: Sprite) {
     } else if (blockMenu.selectedMenuIndex() == 1) {
         tower.destroy()
         info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "total_price") * 0.8))
+    } else if (blockMenu.selectedMenuOption().includes("firing delay")) {
+        tower.say("firing speed", 500)
+    } else if (blockMenu.selectedMenuOption().includes("range")) {
+        tower.say("range", 500)
+    } else if (blockMenu.selectedMenuOption().includes("piercing")) {
+        tower.say("piercing", 500)
     }
 }
 function get_farthest_along_path_bloon (tower: Sprite) {
