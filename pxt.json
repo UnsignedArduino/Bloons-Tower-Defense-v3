@@ -10,7 +10,8 @@
         "tilemaps": "github:microsoft/pxt-tilemaps#v1.11.0",
         "arcade-sprite-data": "github:microsoft/arcade-sprite-data#v0.1.0",
         "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.1",
-        "block-menu": "github:riknoll/arcade-custom-menu#v0.0.1"
+        "block-menu": "github:riknoll/arcade-custom-menu#v0.0.1",
+        "pxt-scaling": "github:jwunderl/pxt-scaling#v0.1.0"
     },
     "files": [
         "main.blocks",

@@ -59,6 +59,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "dart_monkey_left"
     },
+    "mWQkzPlLLR4_;?3gNBxB": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAADwAAAAAAAAAPAAAAAAAAAA8AAAAAAAAAD/DwAAAAAAAP8PAAAAAAAA/w8AAAAAAAD/DwAAAAAAAPAAAAAAAAAA8AAAAAAAAABVBQAAAAAAUFVVAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "dart"
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",
