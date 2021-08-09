@@ -19,6 +19,33 @@ function set_variables () {
     set_game_variables()
     tower_id = 0
 }
+function start_loading () {
+    sprite_loading_screen = sprites.create(assets.image`black_screen`, SpriteKind.Player)
+    sprite_loading_screen.setFlag(SpriteFlag.Ghost, true)
+    sprite_loading_screen.setFlag(SpriteFlag.RelativeToCamera, true)
+    sprite_loading_screen.left = 0
+    sprite_loading_screen.bottom = 0
+    sprite_loading_screen.z = 1000
+    sprite_loading_icon = sprites.create(assets.animation`loading`[0], SpriteKind.Player)
+    sprite_loading_icon.setFlag(SpriteFlag.Ghost, true)
+    sprite_loading_icon.z = 1000
+    sprite_loading_icon.setPosition(sprite_loading_screen.x, sprite_loading_screen.y + 30)
+    animation.runImageAnimation(
+    sprite_loading_icon,
+    assets.animation`loading`,
+    100,
+    true
+    )
+    sprite_loading_screen.ay = 500
+    while (sprite_loading_screen.bottom < scene.screenHeight()) {
+        sprite_loading_icon.setPosition(sprite_loading_screen.x, sprite_loading_screen.y + 30)
+        pause(0)
+    }
+    sprite_loading_screen.ay = 0
+    sprite_loading_screen.vy = 0
+    sprite_loading_screen.bottom = scene.screenHeight()
+    sprite_loading_icon.setPosition(sprite_loading_screen.x, sprite_loading_screen.y + 30)
+}
 function show_tower_range (tower: Sprite) {
     sprite_shader = shader.createImageShaderSprite(image.create(sprites.readDataNumber(tower, "range") * 4, sprites.readDataNumber(tower, "range") * 4), shader.ShadeLevel.One)
     spriteutils.fillCircle(
@@ -127,6 +154,7 @@ function initialize_projectiles () {
     projectile_images = []
     for (let image2 of base_projectile_images) {
         projectile_images.push(scaling.createRotations(image2, dart_angle_precision))
+        pause(0)
     }
 }
 function bloon_hp_to_image (hp: number) {
@@ -355,10 +383,15 @@ function si_ify_number (value: number, precision: number) {
     }
 }
 function game_init () {
+    pause(0)
     finish_tilemap()
+    pause(0)
     make_cursor()
+    pause(0)
     make_round_status_bar()
+    pause(0)
     initialize_projectiles()
+    pause(0)
     blockMenu.setColors(1, 15)
     if (lots_of_money) {
         info.setScore(100000000000000000)
@@ -519,6 +552,20 @@ function update_cursor_icons () {
         sprite_water_icon.setImage(assets.image`no_water_icon`)
     }
 }
+function stop_loading () {
+    sprite_loading_screen.ay = -500
+    while (sprite_loading_screen.bottom > 0) {
+        sprite_loading_icon.setPosition(sprite_loading_screen.x, sprite_loading_screen.y + 30)
+        pause(0)
+    }
+    sprite_loading_screen.ay = 0
+    sprite_loading_screen.vy = 0
+    sprite_loading_screen.bottom = 0
+    sprite_loading_icon.setPosition(sprite_loading_screen.x, sprite_loading_screen.y + 30)
+    pause(100)
+    sprite_loading_screen.destroy()
+    sprite_loading_icon.destroy()
+}
 function new_land_tower () {
     blockMenu.showMenu(["Cancel", "Dart monkey (25$)"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
@@ -580,6 +627,8 @@ let lots_of_money = false
 let game_lose_on_0_lives = false
 let sprite_round_status: StatusBarSprite = null
 let sprite_shader: Sprite = null
+let sprite_loading_icon: Sprite = null
+let sprite_loading_screen: Sprite = null
 let tower_id = 0
 let enable_controls = false
 let round_number = 0
@@ -591,9 +640,15 @@ let in_game = false
 stats.turnStats(true)
 set_variables()
 set_map(0)
+pause(0)
+start_loading()
+pause(0)
 finish_map_loading(0)
+pause(0)
 game_init()
+pause(0)
 in_game = true
+stop_loading()
 timer.background(function () {
     Notification.cancelNotification()
     Notification.waitForNotificationFinish()
