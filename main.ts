@@ -36,6 +36,7 @@ function start_round () {
     in_round = true
     timer.background(function () {
         timer.background(function () {
+            pause(200)
             Notification.cancelNotification()
             Notification.waitForNotificationFinish()
             Notification.notify("Starting round " + round_number)
@@ -46,6 +47,7 @@ function start_round () {
         round_number += 1
         in_round = false
         timer.background(function () {
+            pause(200)
             Notification.cancelNotification()
             Notification.waitForNotificationFinish()
             Notification.notify("Round " + (round_number - 1) + " finished!")
@@ -77,6 +79,7 @@ function update_dart_monkey (tower: Sprite) {
     sprite_projectile.z = 20
     sprite_projectile.setFlag(SpriteFlag.DestroyOnWall, true)
     sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(tower, "dart_health"))
+    sprites.setDataSprite(sprite_projectile, "parent", tower)
     spriteutils.setVelocityAtAngle(sprite_projectile, target_angle, sprites.readDataNumber(tower, "dart_speed"))
 }
 function get_projectile_image (_type: number, angle: number) {
@@ -90,6 +93,16 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             if (is_overlapping_kind(sprite_cursor_pointer, SpriteKind.Tower)) {
                 sprite_tower = get_overlapping_sprite(sprite_cursor_pointer, SpriteKind.Tower)
                 show_tower_range(sprite_tower)
+                timer.background(function () {
+                    while (!(blockMenu.isMenuOpen())) {
+                        pause(0)
+                    }
+                    while (blockMenu.isMenuOpen()) {
+                        sprite_tower.say("" + si_ify_number(sprites.readDataNumber(sprite_tower, "total_pops"), 2) + " pops" + "" + "" + "")
+                        pause(100)
+                    }
+                    sprite_tower.say("")
+                })
                 tower_right_click(sprite_tower)
                 hide_tower_range(sprite_tower)
             } else {
@@ -320,6 +333,27 @@ function wait_for_menu_select (close: boolean) {
         blockMenu.closeMenu()
     }
 }
+function si_ify_number (value: number, precision: number) {
+    if (value >= 1e+24) {
+        return "" + spriteutils.roundWithPrecision(value / 1e+24, precision) + "Y"
+    } else if (value >= 1e+21) {
+        return "" + spriteutils.roundWithPrecision(value / 1e+21, precision) + "Z"
+    } else if (value >= 1000000000000000000) {
+        return "" + spriteutils.roundWithPrecision(value / 1000000000000000000, precision) + "E"
+    } else if (value >= 1000000000000000) {
+        return "" + spriteutils.roundWithPrecision(value / 1000000000000000, precision) + "P"
+    } else if (value >= 1000000000000) {
+        return "" + spriteutils.roundWithPrecision(value / 1000000000000, precision) + "T"
+    } else if (value >= 1000000000) {
+        return "" + spriteutils.roundWithPrecision(value / 1000000000, precision) + "G"
+    } else if (value >= 1000000) {
+        return "" + spriteutils.roundWithPrecision(value / 1000000, precision) + "M"
+    } else if (value >= 1000) {
+        return "" + spriteutils.roundWithPrecision(value / 1000, precision) + "k"
+    } else {
+        return "" + value
+    }
+}
 function game_init () {
     finish_tilemap()
     make_cursor()
@@ -353,6 +387,7 @@ function summon_dart_monkey (x: number, y: number) {
     sprites.setDataString(sprite_tower, "type", "dart_monkey")
     sprites.setDataBoolean(sprite_tower, "facing_left", true)
     sprites.setDataNumber(sprite_tower, "total_price", 25)
+    sprites.setDataNumber(sprite_tower, "total_pops", 0)
     set_firing_data(sprite_tower, 500, -100, 100, 30, 1.3)
     set_range_data(sprite_tower, 32, 8, 80, 50, 1.2)
     set_dart_data(sprite_tower, 0, 1, 1, 5, 20, 1.4, 200)
@@ -518,6 +553,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
     if (sprites.readDataNumber(otherSprite, "health") <= 0) {
         otherSprite.destroy()
         info.changeScoreBy(1)
+        sprites.changeDataNumberBy(sprites.readDataSprite(sprite, "parent"), "total_pops", 1)
     } else {
         otherSprite.setImage(bloon_hp_to_image(sprites.readDataNumber(otherSprite, "health")))
     }
