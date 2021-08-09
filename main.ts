@@ -65,7 +65,7 @@ function get_overlapping_sprite (target: Sprite, kind: number) {
 function set_game_variables () {
     game_lose_on_0_lives = true
     lots_of_money = false
-    dart_angle_precision = 30
+    dart_angle_precision = 60
 }
 function update_dart_monkey (tower: Sprite) {
     sprite_target = get_farthest_along_path_bloon(tower)
@@ -123,7 +123,7 @@ function make_cursor_icons () {
     update_cursor_icons()
 }
 function initialize_projectiles () {
-    base_projectile_images = [assets.image`dart`]
+    base_projectile_images = [assets.image`bullet`, assets.image`dart`]
     projectile_images = []
     for (let image2 of base_projectile_images) {
         projectile_images.push(scaling.createRotations(image2, dart_angle_precision))
@@ -390,7 +390,7 @@ function summon_dart_monkey (x: number, y: number) {
     sprites.setDataNumber(sprite_tower, "total_pops", 0)
     set_firing_data(sprite_tower, 500, -100, 100, 30, 1.3)
     set_range_data(sprite_tower, 32, 8, 80, 50, 1.2)
-    set_dart_data(sprite_tower, 0, 1, 1, 5, 20, 1.4, 200)
+    set_dart_data(sprite_tower, 1, 1, 1, 5, 20, 1.4, 200)
     sprite_tower.setPosition(x, y)
     sprite_tower.z = 30
 }

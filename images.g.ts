@@ -184,6 +184,11 @@ f f b d f f f 5 5 e e f . . . .
             case "blank":return img`
 . 
 `;
+            case "_muj{,UF46(Ww!7WWBrh":
+            case "bullet":return img`
+f f 
+f f 
+`;
         }
         return null;
     })
