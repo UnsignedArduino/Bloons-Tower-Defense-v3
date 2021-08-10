@@ -555,10 +555,6 @@ function finish_map_loading (index: number) {
         finish_walk_in_the_park_map()
     }
 }
-TilemapPath.onEventWithHandlerArgs(function (sprite) {
-    info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
-    sprite.destroy()
-})
 function is_overlapping_kind (target: Sprite, kind: number) {
     for (let sprite of sprites.allOfKind(kind)) {
         if (target.overlapsWith(sprite)) {
