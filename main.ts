@@ -535,6 +535,10 @@ function run_round (round_code: string, delay: number) {
         pause(delay)
     }
 }
+TilemapPath.on_sprite_finishes_path(function (sprite) {
+    info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
+    sprite.destroy()
+})
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     if (enable_controls) {
         if (in_game) {

@@ -3,7 +3,7 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "TilemapPath": "github:unsignedarduino/tilemappath#59623a16b911ea351fe9f6dfab130bbbc01a2426",
+        "TilemapPath": "github:unsignedarduino/tilemappath#27ff80b905e9a311d3e36aecbf38fd1fd23af8ca",
         "Stats": "github:UnsignedArduino/Stats#9102333e1ca6cbaf8a979ceb252274b2f09b9005",
         "Notifications": "github:unsignedarduino/notifications#cd76e090c9a5c04ef0346d4fab71b147ee8c3db7",
         "Timers": "github:microsoft/arcade-timers#v1.1.0",
