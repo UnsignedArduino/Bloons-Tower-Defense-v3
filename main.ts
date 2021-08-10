@@ -18,7 +18,7 @@ function update_sniper_monkey (tower: Sprite) {
     sprite_projectile.setPosition(tower.x, tower.y)
     sprite_projectile.z = 20
     sprite_projectile.setFlag(SpriteFlag.DestroyOnWall, true)
-    sprite_projectile.setFlag(SpriteFlag.Invisible, false)
+    sprite_projectile.setFlag(SpriteFlag.Invisible, true)
     sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(tower, "dart_health"))
     sprites.setDataSprite(sprite_projectile, "parent", tower)
     if (false) {
@@ -48,6 +48,7 @@ function start_loading () {
     sprite_loading_screen.z = 1000
     sprite_loading_icon = sprites.create(assets.animation`loading`[0], SpriteKind.Player)
     sprite_loading_icon.setFlag(SpriteFlag.Ghost, true)
+    sprite_loading_icon.setFlag(SpriteFlag.RelativeToCamera, true)
     sprite_loading_icon.z = 1000
     sprite_loading_icon.setPosition(sprite_loading_screen.x, sprite_loading_screen.y + 30)
     animation.runImageAnimation(
@@ -83,7 +84,7 @@ function start_round () {
     in_round = true
     timer.background(function () {
         timer.background(function () {
-            pause(200)
+            pause(500)
             Notification.cancelNotification()
             Notification.waitForNotificationFinish()
             Notification.notify("Starting round " + round_number)
@@ -94,7 +95,7 @@ function start_round () {
         round_number += 1
         in_round = false
         timer.background(function () {
-            pause(200)
+            pause(500)
             Notification.cancelNotification()
             Notification.waitForNotificationFinish()
             Notification.notify("Round " + (round_number - 1) + " finished!")
@@ -202,7 +203,7 @@ function summon_sniper_monkey (x: number, y: number) {
     sprites.setDataNumber(sprite_tower, "total_pops", 0)
     set_firing_data__tower_basic_inc_best_price_mul(sprite_tower, 1000, -200, 100, 30, 1.4)
     set_range_data__tower_basic_inc_best_price_mul(sprite_tower, tiles.tilemapColumns() * tiles.tileWidth(), 0, tiles.tilemapColumns() * tiles.tileWidth(), 50, 1.2)
-    set_dart_data__tower_type_basic_inc_best_price_mul_speed(sprite_tower, 0, 2, 2, 10, 20, 1.5, 5000)
+    set_dart_data__tower_type_basic_inc_best_price_mul_speed(sprite_tower, 0, 2, 2, 10, 20, 1.5, 500)
     sprite_tower.setPosition(x, y)
     sprite_tower.z = 30
 }
@@ -260,7 +261,13 @@ function get_farthest_along_path_bloon (tower: Sprite) {
         if (spriteutils.distanceBetween(tower, sprite_bloon) > sprites.readDataNumber(tower, "range")) {
             continue;
         }
-        if (!(farthest_along_bloon) || scene.spritePercentPathCompleted(sprite_bloon) > scene.spritePercentPathCompleted(farthest_along_bloon)) {
+        if (!(farthest_along_bloon)) {
+            farthest_along_bloon = sprite_bloon
+        } else if (sprites.readDataNumber(sprite_bloon, "_tilemap_path_curr_segment") > sprites.readDataNumber(farthest_along_bloon, "_tilemap_path_curr_segment")) {
+            farthest_along_bloon = sprite_bloon
+        } else if (sprites.readDataNumber(sprite_bloon, "_tilemap_path_curr_segment") < sprites.readDataNumber(farthest_along_bloon, "_tilemap_path_curr_segment")) {
+        	
+        } else if (scene.spritePercentPathCompleted(sprite_bloon) > scene.spritePercentPathCompleted(farthest_along_bloon)) {
             farthest_along_bloon = sprite_bloon
         }
     }
@@ -689,8 +696,8 @@ pause(0)
 game_init()
 pause(0)
 in_game = true
-stop_loading()
 timer.background(function () {
+    stop_loading()
     Notification.cancelNotification()
     Notification.waitForNotificationFinish()
     Notification.notify("Press menu to start the round")
