@@ -372,6 +372,27 @@ ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 `;
+            case "8:1=PEu2Jp;R4CZO9pKZ":
+            case "sniper_monkey_left":return img`
+.....fffffff......
+..fffee777eefff...
+.fe777ee7eee7e7f..
+..fffffffffffff...
+....fddddeeef.....
+....fddfddeeff....
+...cdddfddeeddf...
+..cdeeddddeebdc...
+..cddddcddeebffff.
+..cffffffffffccccf
+fffffccccccccffff.
+fccccfffffffff....
+fffffffeeeefff.ff.
+....feefeeeeff.ef.
+...ffeeefffffffef.
+...fbdfeefbbfffef.
+...fddffeeddbffff.
+...fffffffffffff..
+`;
         }
         return null;
     })

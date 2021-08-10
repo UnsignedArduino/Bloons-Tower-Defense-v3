@@ -7,6 +7,26 @@ namespace StatusBarKind {
 function on_land_tile () {
     return land_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
 }
+function update_sniper_monkey (tower: Sprite) {
+    sprite_target = get_farthest_along_path_bloon(tower)
+    if (!(sprite_target)) {
+        return
+    }
+    target_angle = spriteutils.angleFrom(tower, sprite_target)
+    update_tower_image(tower, spriteutils.radiansToDegrees(target_angle) - 90)
+    sprite_projectile = sprites.create(get_projectile_image(sprites.readDataNumber(tower, "dart_type"), spriteutils.radiansToDegrees(target_angle) + 180), SpriteKind.Projectile)
+    sprite_projectile.setPosition(tower.x, tower.y)
+    sprite_projectile.z = 20
+    sprite_projectile.setFlag(SpriteFlag.DestroyOnWall, true)
+    sprite_projectile.setFlag(SpriteFlag.Invisible, false)
+    sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(tower, "dart_health"))
+    sprites.setDataSprite(sprite_projectile, "parent", tower)
+    if (false) {
+        sprite_projectile.follow(sprite_target, sprites.readDataNumber(tower, "dart_speed"))
+    } else {
+        spriteutils.setVelocityAtAngle(sprite_projectile, target_angle, sprites.readDataNumber(tower, "dart_speed"))
+    }
+}
 function update_cursor () {
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
@@ -119,7 +139,9 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
             enable_cursor_movement(false)
             if (is_overlapping_kind(sprite_cursor_pointer, SpriteKind.Tower)) {
                 sprite_tower = get_overlapping_sprite(sprite_cursor_pointer, SpriteKind.Tower)
-                show_tower_range(sprite_tower)
+                if (sprites.readDataString(sprite_tower, "type") != "sniper_monkey") {
+                    show_tower_range(sprite_tower)
+                }
                 timer.background(function () {
                     while (!(blockMenu.isMenuOpen())) {
                         pause(0)
@@ -131,7 +153,9 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
                     sprite_tower.say("")
                 })
                 tower_right_click(sprite_tower)
-                hide_tower_range(sprite_tower)
+                if (sprites.readDataString(sprite_tower, "type") != "sniper_monkey") {
+                    hide_tower_range(sprite_tower)
+                }
             } else {
                 new_tower_menu()
             }
@@ -167,6 +191,20 @@ function bloon_hp_to_image (hp: number) {
     } else {
         return assets.image`test_bloon`
     }
+}
+function summon_sniper_monkey (x: number, y: number) {
+    sprite_tower = sprites.create(assets.image`sniper_monkey_left`, SpriteKind.Tower)
+    sprites.setDataNumber(sprite_tower, "id", tower_id)
+    tower_id += 1
+    sprites.setDataString(sprite_tower, "type", "sniper_monkey")
+    sprites.setDataBoolean(sprite_tower, "facing_left", true)
+    sprites.setDataNumber(sprite_tower, "total_price", 40)
+    sprites.setDataNumber(sprite_tower, "total_pops", 0)
+    set_firing_data__tower_basic_inc_best_price_mul(sprite_tower, 1000, -200, 100, 30, 1.4)
+    set_range_data__tower_basic_inc_best_price_mul(sprite_tower, tiles.tilemapColumns() * tiles.tileWidth(), 0, tiles.tilemapColumns() * tiles.tileWidth(), 50, 1.2)
+    set_dart_data__tower_type_basic_inc_best_price_mul_speed(sprite_tower, 0, 2, 2, 10, 20, 1.5, 5000)
+    sprite_tower.setPosition(x, y)
+    sprite_tower.z = 30
 }
 function tower_right_click (tower: Sprite) {
     menu_options = ["Cancel"]
@@ -291,6 +329,22 @@ function finish_tilemap () {
             tiles.setWallAt(location, true)
         }
     }
+}
+function set_firing_data__tower_basic_inc_best_price_mul (tower: Sprite, basic2: number, inc: number, best: number, price: number, multiplier: number) {
+    sprites.setDataNumber(tower, "firing_speed", basic2)
+    sprites.setDataNumber(tower, "firing_speed_inc", inc)
+    sprites.setDataNumber(tower, "firing_speed_best", best)
+    sprites.setDataNumber(tower, "firing_speed_price", price)
+    sprites.setDataNumber(tower, "firing_speed_price_mul", multiplier)
+}
+function set_dart_data__tower_type_basic_inc_best_price_mul_speed (tower: Sprite, _type: number, basic2: number, inc: number, best: number, price: number, multiplier: number, speed: number) {
+    sprites.setDataNumber(tower, "dart_type", _type)
+    sprites.setDataNumber(tower, "dart_health", basic2)
+    sprites.setDataNumber(tower, "dart_health_inc", inc)
+    sprites.setDataNumber(tower, "dart_health_best", best)
+    sprites.setDataNumber(tower, "dart_health_price", price)
+    sprites.setDataNumber(tower, "dart_health_price_mul", multiplier)
+    sprites.setDataNumber(tower, "dart_speed", speed)
 }
 function hide_tower_range (tower: Sprite) {
     sprites.readDataSprite(tower, "tower_range_shadow").destroy()
@@ -421,9 +475,9 @@ function summon_dart_monkey (x: number, y: number) {
     sprites.setDataBoolean(sprite_tower, "facing_left", true)
     sprites.setDataNumber(sprite_tower, "total_price", 25)
     sprites.setDataNumber(sprite_tower, "total_pops", 0)
-    set_firing_data(sprite_tower, 500, -100, 100, 30, 1.3)
-    set_range_data(sprite_tower, 32, 8, 80, 50, 1.2)
-    set_dart_data(sprite_tower, 1, 1, 1, 5, 20, 1.4, 200)
+    set_firing_data__tower_basic_inc_best_price_mul(sprite_tower, 500, -100, 100, 30, 1.3)
+    set_range_data__tower_basic_inc_best_price_mul(sprite_tower, 32, 8, 80, 50, 1.2)
+    set_dart_data__tower_type_basic_inc_best_price_mul_speed(sprite_tower, 1, 1, 1, 5, 20, 1.4, 200)
     sprite_tower.setPosition(x, y)
     sprite_tower.z = 30
 }
@@ -451,13 +505,6 @@ function bloon_hp_to_speed (hp: number) {
     } else {
         return 50 * 1
     }
-}
-function set_firing_data (tower: Sprite, basic2: number, inc: number, best: number, price: number, multiplier: number) {
-    sprites.setDataNumber(tower, "firing_speed", basic2)
-    sprites.setDataNumber(tower, "firing_speed_inc", inc)
-    sprites.setDataNumber(tower, "firing_speed_best", best)
-    sprites.setDataNumber(tower, "firing_speed_price", price)
-    sprites.setDataNumber(tower, "firing_speed_price_mul", multiplier)
 }
 function new_tower_menu () {
     if (on_water_tile()) {
@@ -503,26 +550,10 @@ info.onLifeZero(function () {
         game.over(false)
     }
 })
-function set_dart_data (tower: Sprite, _type: number, basic2: number, inc: number, best: number, price: number, multiplier: number, speed: number) {
-    sprites.setDataNumber(tower, "dart_type", _type)
-    sprites.setDataNumber(tower, "dart_health", basic2)
-    sprites.setDataNumber(tower, "dart_health_inc", inc)
-    sprites.setDataNumber(tower, "dart_health_best", best)
-    sprites.setDataNumber(tower, "dart_health_price", price)
-    sprites.setDataNumber(tower, "dart_health_price_mul", multiplier)
-    sprites.setDataNumber(tower, "dart_speed", speed)
-}
 function finish_map_loading (index: number) {
     if (index == 0) {
         finish_walk_in_the_park_map()
     }
-}
-function set_range_data (tower: Sprite, basic2: number, inc: number, best: number, price: number, multiplier: number) {
-    sprites.setDataNumber(tower, "range", basic2)
-    sprites.setDataNumber(tower, "range_inc", inc)
-    sprites.setDataNumber(tower, "range_best", best)
-    sprites.setDataNumber(tower, "range_price", price)
-    sprites.setDataNumber(tower, "range_price_mul", multiplier)
 }
 TilemapPath.onEventWithHandlerArgs(function (sprite) {
     info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
@@ -566,14 +597,24 @@ function stop_loading () {
     sprite_loading_screen.destroy()
     sprite_loading_icon.destroy()
 }
+function set_range_data__tower_basic_inc_best_price_mul (tower: Sprite, basic2: number, inc: number, best: number, price: number, multiplier: number) {
+    sprites.setDataNumber(tower, "range", basic2)
+    sprites.setDataNumber(tower, "range_inc", inc)
+    sprites.setDataNumber(tower, "range_best", best)
+    sprites.setDataNumber(tower, "range_price", price)
+    sprites.setDataNumber(tower, "range_price_mul", multiplier)
+}
 function new_land_tower () {
-    blockMenu.showMenu(["Cancel", "Dart monkey (25$)"], MenuStyle.List, MenuLocation.BottomHalf)
+    blockMenu.showMenu(["Cancel", "Dart monkey ($25)", "Sniper monkey ($40)"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
     if (blockMenu.selectedMenuIndex() == 0) {
         return
     } else if (blockMenu.selectedMenuIndex() == 1 && info.score() >= 25) {
         info.changeScoreBy(-25)
         summon_dart_monkey(sprite_cursor_pointer.x, sprite_cursor_pointer.y)
+    } else if (blockMenu.selectedMenuIndex() == 2 && info.score() >= 40) {
+        info.changeScoreBy(-40)
+        summon_sniper_monkey(sprite_cursor_pointer.x, sprite_cursor_pointer.y)
     } else {
         game.showLongText("Not enough money!", DialogLayout.Bottom)
     }
@@ -619,9 +660,6 @@ let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
 let sprite_tower: Sprite = null
 let projectile_images: Image[][] = []
-let sprite_projectile: Sprite = null
-let target_angle = 0
-let sprite_target: Sprite = null
 let dart_angle_precision = 0
 let lots_of_money = false
 let game_lose_on_0_lives = false
@@ -634,6 +672,9 @@ let enable_controls = false
 let round_number = 0
 let in_round = false
 let sprite_cursor: Sprite = null
+let sprite_projectile: Sprite = null
+let target_angle = 0
+let sprite_target: Sprite = null
 let sprite_cursor_pointer: Sprite = null
 let land_tiles: Image[] = []
 let in_game = false
@@ -663,6 +704,10 @@ game.onUpdate(function () {
         if (sprites.readDataString(sprite_tower, "type") == "dart_monkey") {
             timer.throttle("update_dart_monkey_" + sprites.readDataNumber(sprite_tower, "id"), sprites.readDataNumber(sprite_tower, "firing_speed"), function () {
                 update_dart_monkey(sprite_tower)
+            })
+        } else if (sprites.readDataString(sprite_tower, "type") == "sniper_monkey") {
+            timer.throttle("update_sniper_monkey_" + sprites.readDataNumber(sprite_tower, "id"), sprites.readDataNumber(sprite_tower, "firing_speed"), function () {
+                update_sniper_monkey(sprite_tower)
             })
         }
     }
