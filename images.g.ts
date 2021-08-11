@@ -184,11 +184,6 @@ f f b d f f f 5 5 e e f . . . .
             case "blank":return img`
 . 
 `;
-            case "_muj{,UF46(Ww!7WWBrh":
-            case "bullet":return img`
-f f 
-f f 
-`;
             case "0/|#*!Xz}}Oy!Zvf":
             case "black_screen":return img`
 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
@@ -392,6 +387,51 @@ fffffffeeeefff.ff.
 ...fbdfeefbbfffef.
 ...fddffeeddbffff.
 ...fffffffffffff..
+`;
+            case "|PTI[/;FXXEA[b9u[`zs":
+            case "tack_shooter":return img`
+. . . . . f f f f f f . . . . . 
+. . f f f 3 3 3 3 3 3 f f f . . 
+. f d d d d d d d d d d d d f . 
+. . f f 3 3 3 3 3 3 3 3 f f . . 
+f f f f f f f f f f f f f f f f 
+f f f f c c f c c f c c f f f f 
+. . f c c c f c c f c c c f . . 
+. f c c c f f c c f f c c c f . 
+f c c c f 3 f c c f 3 f c c c f 
+f c c f 3 3 f c c f 3 3 f c c f 
+. f f f 3 3 f c c f 3 3 f f f . 
+. . . f 3 3 3 f f 3 3 3 f . . . 
+. . . f 3 3 3 3 3 3 3 3 f . . . 
+. . f f f f f f f f f f f f . . 
+. f c c c c c c c c c c c c f . 
+. . f f f f f f f f f f f f . . 
+`;
+            case "S":
+            case "tack":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . c . . . . . 
+. . . . c c c c c c c . . . . . 
+. . . . . . . . . . c . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`;
+            case "_muj{,UF46(Ww!7WWBrh":
+            case "bullet":return img`
+. . . . 
+. f f . 
+. f f . 
+. . . . 
 `;
         }
         return null;

@@ -68,12 +68,12 @@ function start_loading () {
     sprite_loading_icon.setPosition(sprite_loading_screen.x, sprite_loading_screen.y + 30)
 }
 function show_tower_range (tower: Sprite) {
-    sprite_shader = shader.createImageShaderSprite(image.create(sprites.readDataNumber(tower, "range") * 4, sprites.readDataNumber(tower, "range") * 4), shader.ShadeLevel.One)
+    sprite_shader = shader.createImageShaderSprite(image.create(sprites.readDataNumber(tower, "range") * 2, sprites.readDataNumber(tower, "range") * 2), shader.ShadeLevel.One)
     spriteutils.fillCircle(
     sprite_shader.image,
-    sprites.readDataNumber(tower, "range") * 2,
-    sprites.readDataNumber(tower, "range") * 2,
-    sprites.readDataNumber(tower, "range"),
+    sprites.readDataNumber(tower, "range") * 1,
+    sprites.readDataNumber(tower, "range") * 1,
+    sprites.readDataNumber(tower, "range") * 1,
     15
     )
     sprite_shader.setPosition(tower.x, tower.y)
@@ -131,7 +131,7 @@ function update_dart_monkey (tower: Sprite) {
     spriteutils.setVelocityAtAngle(sprite_projectile, target_angle, sprites.readDataNumber(tower, "dart_speed"))
 }
 function get_projectile_image (_type: number, angle: number) {
-    return projectile_images[_type][Math.idiv(angle, 360 / dart_angle_precision)]
+    return projectile_images[_type][Math.idiv(angle, 360 / dart_angle_precision) % dart_angle_precision]
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (enable_controls) {
@@ -175,7 +175,7 @@ function make_cursor_icons () {
     update_cursor_icons()
 }
 function initialize_projectiles () {
-    base_projectile_images = [assets.image`bullet`, assets.image`dart`]
+    base_projectile_images = [assets.image`bullet`, assets.image`dart`, assets.image`tack`]
     projectile_images = []
     for (let image2 of base_projectile_images) {
         projectile_images.push(scaling.createRotations(image2, dart_angle_precision))
@@ -542,6 +542,23 @@ function run_round (round_code: string, delay: number) {
         pause(delay)
     }
 }
+function update_tack_shooter (tower: Sprite) {
+    if (spriteutils.getSpritesWithin(SpriteKind.Enemy, sprites.readDataNumber(tower, "range"), tower).length == 0) {
+        return
+    }
+    target_angle = 0
+    for (let index = 0; index < 8; index++) {
+        sprite_projectile = sprites.create(get_projectile_image(sprites.readDataNumber(tower, "dart_type"), spriteutils.radiansToDegrees(target_angle) + 180), SpriteKind.Projectile)
+        sprite_projectile.setPosition(tower.x, tower.y)
+        sprite_projectile.z = 20
+        sprite_projectile.lifespan = sprites.readDataNumber(tower, "range") / sprites.readDataNumber(tower, "dart_speed") * 1000
+        sprite_projectile.setFlag(SpriteFlag.DestroyOnWall, true)
+        sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(tower, "dart_health"))
+        sprites.setDataSprite(sprite_projectile, "parent", tower)
+        spriteutils.setVelocityAtAngle(sprite_projectile, target_angle, sprites.readDataNumber(tower, "dart_speed"))
+        target_angle += spriteutils.degreesToRadians(360 / 8)
+    }
+}
 TilemapPath.on_sprite_finishes_path(function (sprite) {
     info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
     sprite.destroy()
@@ -561,6 +578,20 @@ info.onLifeZero(function () {
         game.over(false)
     }
 })
+function summon_tack_shooter (x: number, y: number) {
+    sprite_tower = sprites.create(assets.image`tack_shooter`, SpriteKind.Tower)
+    sprites.setDataNumber(sprite_tower, "id", tower_id)
+    tower_id += 1
+    sprites.setDataString(sprite_tower, "type", "tack_shooter")
+    sprites.setDataBoolean(sprite_tower, "facing_left", true)
+    sprites.setDataNumber(sprite_tower, "total_price", 30)
+    sprites.setDataNumber(sprite_tower, "total_pops", 0)
+    set_firing_data__tower_basic_inc_best_price_mul(sprite_tower, 500, -100, 100, 25, 1.5)
+    set_range_data__tower_basic_inc_best_price_mul(sprite_tower, 16, 8, 32, 40, 1.75)
+    set_dart_data__tower_type_basic_inc_best_price_mul_speed(sprite_tower, 2, 1, 1, 5, 25, 1.4, 500)
+    sprite_tower.setPosition(x, y)
+    sprite_tower.z = 30
+}
 function finish_map_loading (index: number) {
     if (index == 0) {
         finish_walk_in_the_park_map()
@@ -612,14 +643,17 @@ function set_range_data__tower_basic_inc_best_price_mul (tower: Sprite, basic2: 
     sprites.setDataNumber(tower, "range_price_mul", multiplier)
 }
 function new_land_tower () {
-    blockMenu.showMenu(["Cancel", "Dart monkey ($25)", "Sniper monkey ($40)"], MenuStyle.List, MenuLocation.BottomHalf)
+    blockMenu.showMenu(["Cancel", "Dart monkey ($25)", "Tack shooter ($30)", "Sniper monkey ($40)"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
     if (blockMenu.selectedMenuIndex() == 0) {
         return
     } else if (blockMenu.selectedMenuIndex() == 1 && info.score() >= 25) {
         info.changeScoreBy(-25)
         summon_dart_monkey(sprite_cursor_pointer.x, sprite_cursor_pointer.y)
-    } else if (blockMenu.selectedMenuIndex() == 2 && info.score() >= 40) {
+    } else if (blockMenu.selectedMenuIndex() == 2 && info.score() >= 30) {
+        info.changeScoreBy(-30)
+        summon_tack_shooter(sprite_cursor_pointer.x, sprite_cursor_pointer.y)
+    } else if (blockMenu.selectedMenuIndex() == 3 && info.score() >= 40) {
         info.changeScoreBy(-40)
         summon_sniper_monkey(sprite_cursor_pointer.x, sprite_cursor_pointer.y)
     } else {
@@ -715,6 +749,10 @@ game.onUpdate(function () {
         } else if (sprites.readDataString(sprite_tower, "type") == "sniper_monkey") {
             timer.throttle("update_sniper_monkey_" + sprites.readDataNumber(sprite_tower, "id"), sprites.readDataNumber(sprite_tower, "firing_speed"), function () {
                 update_sniper_monkey(sprite_tower)
+            })
+        } else if (sprites.readDataString(sprite_tower, "type") == "tack_shooter") {
+            timer.throttle("update_tack_shooter" + sprites.readDataNumber(sprite_tower, "id"), sprites.readDataNumber(sprite_tower, "firing_speed"), function () {
+                update_tack_shooter(sprite_tower)
             })
         }
     }
