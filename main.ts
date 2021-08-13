@@ -273,6 +273,10 @@ function get_farthest_along_path_bloon (tower: Sprite) {
     }
     return farthest_along_bloon
 }
+function set_beautiful_beach_map () {
+    scene.setBackgroundColor(13)
+    tiles.setTilemap(tilemap`beautiful_beach_map`)
+}
 function enable_cursor_movement (en: boolean) {
     if (en) {
         controller.moveSprite(sprite_cursor_pointer, 100, 100)
@@ -331,7 +335,15 @@ function make_round_status_bar () {
     sprite_round_status.setFlag(SpriteFlag.Invisible, true)
 }
 function finish_tilemap () {
-    for (let tile of [sprites.builtin.forestTiles0, sprites.castle.rock0, sprites.castle.rock1]) {
+    for (let tile of [
+    sprites.builtin.forestTiles0,
+    sprites.castle.rock0,
+    sprites.castle.rock1,
+    sprites.castle.rock2,
+    sprites.swamp.swampTile2,
+    sprites.swamp.swampTile3,
+    sprites.swamp.swampTile0
+    ]) {
         for (let location of tiles.getTilesByType(tile)) {
             tiles.setWallAt(location, true)
         }
@@ -357,7 +369,12 @@ function hide_tower_range (tower: Sprite) {
     sprites.readDataSprite(tower, "tower_range_shadow").destroy()
 }
 function finish_walk_in_the_park_map () {
-    land_tiles = [assets.tile`grass`, sprites.castle.tileGrass1, sprites.castle.tileGrass3, sprites.castle.tileGrass2]
+    land_tiles = [
+    assets.tile`grass`,
+    sprites.castle.tileGrass1,
+    sprites.castle.tileGrass3,
+    sprites.castle.tileGrass2
+    ]
     water_tiles = [
     assets.tile`top_left_water`,
     assets.tile`top_water`,
@@ -500,6 +517,8 @@ function new_water_tower () {
 function set_map (index: number) {
     if (index == 0) {
         set_walk_in_the_park_map()
+    } else if (index == 1) {
+        set_beautiful_beach_map()
     }
 }
 function bloon_hp_to_speed (hp: number) {
@@ -595,6 +614,8 @@ function summon_tack_shooter (x: number, y: number) {
 function finish_map_loading (index: number) {
     if (index == 0) {
         finish_walk_in_the_park_map()
+    } else if (index == 1) {
+        finish_beautiful_beach_map()
     }
 }
 function is_overlapping_kind (target: Sprite, kind: number) {
@@ -643,7 +664,12 @@ function set_range_data__tower_basic_inc_best_price_mul (tower: Sprite, basic2: 
     sprites.setDataNumber(tower, "range_price_mul", multiplier)
 }
 function new_land_tower () {
-    blockMenu.showMenu(["Cancel", "Dart monkey ($25)", "Tack shooter ($30)", "Sniper monkey ($40)"], MenuStyle.List, MenuLocation.BottomHalf)
+    blockMenu.showMenu([
+    "Cancel",
+    "Dart monkey ($25)",
+    "Tack shooter ($30)",
+    "Sniper monkey ($40)"
+    ], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
     if (blockMenu.selectedMenuIndex() == 0) {
         return
@@ -673,6 +699,26 @@ function summon_bloon (hp: number) {
 blockMenu.onMenuOptionSelected(function (option, index) {
     menu_selected = true
 })
+function finish_beautiful_beach_map () {
+    land_tiles = [assets.tile`sand_left`, sprites.castle.tilePath5]
+    water_tiles = [assets.tile`water`]
+    spawn_locations = [tiles.getTileLocation(0, 1)]
+    bloon_paths = [TilemapPath.create_path([
+    tiles.getTileLocation(18, 1),
+    tiles.getTileLocation(18, 4),
+    tiles.getTileLocation(15, 4),
+    tiles.getTileLocation(15, 1),
+    tiles.getTileLocation(18, 1),
+    tiles.getTileLocation(18, 8),
+    tiles.getTileLocation(11, 8),
+    tiles.getTileLocation(11, 1),
+    tiles.getTileLocation(18, 1),
+    tiles.getTileLocation(18, 13),
+    tiles.getTileLocation(6, 13),
+    tiles.getTileLocation(6, 1),
+    tiles.getTileLocation(19, 1)
+    ])]
+}
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     sprites.changeDataNumberBy(sprite, "health", -1)
     sprites.changeDataNumberBy(otherSprite, "health", -1)
@@ -721,11 +767,12 @@ let land_tiles: Image[] = []
 let in_game = false
 stats.turnStats(true)
 set_variables()
-set_map(0)
+let current_map = 1
+set_map(current_map)
 pause(0)
 start_loading()
 pause(0)
-finish_map_loading(0)
+finish_map_loading(current_map)
 pause(0)
 game_init()
 pause(0)
