@@ -34,6 +34,8 @@ function update_cursor () {
 function set_variables () {
     in_game = false
     in_round = false
+    max_map = 1
+    current_map = 0
     round_number = 1
     enable_controls = true
     set_game_variables()
@@ -272,6 +274,26 @@ function get_farthest_along_path_bloon (tower: Sprite) {
         }
     }
     return farthest_along_bloon
+}
+function select_map () {
+    current_map = 0
+    set_map(current_map)
+    while (!(controller.A.isPressed())) {
+        pause(50)
+        if (!(controller.anyButton.isPressed())) {
+            continue;
+        }
+        if (controller.left.isPressed()) {
+            if (current_map > 0) {
+                current_map += -1
+            }
+        } else if (controller.right.isPressed()) {
+            if (current_map < max_map) {
+                current_map += 1
+            }
+        }
+        set_map(current_map)
+    }
 }
 function set_beautiful_beach_map () {
     scene.setBackgroundColor(13)
@@ -757,6 +779,7 @@ let sprite_loading_screen: Sprite = null
 let tower_id = 0
 let enable_controls = false
 let round_number = 0
+let max_map = 0
 let in_round = false
 let sprite_cursor: Sprite = null
 let sprite_projectile: Sprite = null
@@ -765,9 +788,10 @@ let sprite_target: Sprite = null
 let sprite_cursor_pointer: Sprite = null
 let land_tiles: Image[] = []
 let in_game = false
+let current_map = 0
 stats.turnStats(true)
 set_variables()
-let current_map = 1
+select_map()
 set_map(current_map)
 pause(0)
 start_loading()
