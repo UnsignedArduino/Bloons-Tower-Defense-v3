@@ -286,6 +286,13 @@ function select_map () {
     sprite_map_title.setFlag(SpriteFlag.RelativeToCamera, true)
     sprite_map_title.setFlag(SpriteFlag.Ghost, true)
     update_map = true
+    sprite_map_sel_title = sprites.create(assets.image`map_select_title_template`, SpriteKind.Player)
+    sprite_map_sel_title.left = 0
+    sprite_map_sel_title.top = 0
+    sprite_map_sel_title.setFlag(SpriteFlag.AutoDestroy, true)
+    sprite_map_sel_title.setFlag(SpriteFlag.RelativeToCamera, true)
+    sprite_map_sel_title.setFlag(SpriteFlag.Ghost, true)
+    images.print(sprite_map_sel_title.image, "Please select a map:", 4, 4, 1)
     sprite_map_sel_cam = sprites.create(assets.image`blank`, SpriteKind.Player)
     scene.cameraFollowSprite(sprite_map_sel_cam)
     map_sel_anim_path = TilemapPath.create_path([
@@ -332,6 +339,8 @@ function select_map () {
         pause(50)
     }
     sprite_map_title.ay = 500
+    sprite_map_sel_title.ay = -500
+    pause(300)
     TilemapPath.stop_follow_path(sprite_map_sel_cam)
     sprite_map_sel_cam.destroy()
 }
@@ -810,6 +819,7 @@ let water_tiles: Image[] = []
 let round_code = ""
 let map_sel_anim_path: TilemapPath.TilemapPath = null
 let sprite_map_sel_cam: Sprite = null
+let sprite_map_sel_title: Sprite = null
 let update_map = false
 let sprite_map_title: Sprite = null
 let map_names: string[] = []
