@@ -277,10 +277,18 @@ function get_farthest_along_path_bloon (tower: Sprite) {
 }
 function select_map () {
     current_map = 0
+    map_names = ["Walk in the Park", "Beautiful Beach"]
     set_map(current_map)
+    sprite_map_title = sprites.create(assets.image`map_title_template`, SpriteKind.Player)
+    sprite_map_title.left = 0
+    sprite_map_title.bottom = scene.screenHeight()
+    sprite_map_title.setFlag(SpriteFlag.AutoDestroy, true)
+    sprite_map_title.setFlag(SpriteFlag.RelativeToCamera, true)
+    sprite_map_title.setFlag(SpriteFlag.Ghost, true)
+    update_map_title = true
     while (!(controller.A.isPressed())) {
         pause(50)
-        if (!(controller.anyButton.isPressed())) {
+        if (!(controller.anyButton.isPressed()) && !(update_map_title)) {
             continue;
         }
         if (controller.left.isPressed()) {
@@ -293,7 +301,16 @@ function select_map () {
             }
         }
         set_map(current_map)
+        update_map_title = false
+        sprite_map_title.setImage(assets.image`map_title_template`)
+        if (current_map == 0) {
+            sprite_map_title.image.fillRect(3, 4, 4, 8, 15)
+        } else if (current_map == max_map) {
+            sprite_map_title.image.fillRect(153, 4, 4, 8, 15)
+        }
+        images.print(sprite_map_title.image, map_names[current_map], 10, 4, 1)
     }
+    sprite_map_title.ay = 500
 }
 function set_beautiful_beach_map () {
     scene.setBackgroundColor(13)
@@ -762,6 +779,9 @@ let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
 let round_code = ""
+let update_map_title = false
+let sprite_map_title: Sprite = null
+let map_names: string[] = []
 let farthest_along_bloon: Sprite = null
 let menu_options: string[] = []
 let base_projectile_images: Image[] = []
