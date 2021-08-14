@@ -285,23 +285,38 @@ function select_map () {
     sprite_map_title.setFlag(SpriteFlag.AutoDestroy, true)
     sprite_map_title.setFlag(SpriteFlag.RelativeToCamera, true)
     sprite_map_title.setFlag(SpriteFlag.Ghost, true)
-    update_map_title = true
+    update_map = true
+    sprite_map_sel_cam = sprites.create(assets.image`blank`, SpriteKind.Player)
+    scene.cameraFollowSprite(sprite_map_sel_cam)
+    map_sel_anim_path = TilemapPath.create_path([
+    tiles.getTileLocation(5, 5),
+    tiles.getTileLocation(14, 5),
+    tiles.getTileLocation(14, 9),
+    tiles.getTileLocation(5, 9),
+    tiles.getTileLocation(5, 5)
+    ])
     while (!(controller.A.isPressed())) {
-        pause(50)
-        if (!(controller.anyButton.isPressed()) && !(update_map_title)) {
+        if (!(controller.anyButton.isPressed()) && !(update_map)) {
+            pause(50)
             continue;
         }
         if (controller.left.isPressed()) {
             if (current_map > 0) {
                 current_map += -1
+                update_map = true
             }
         } else if (controller.right.isPressed()) {
             if (current_map < max_map) {
                 current_map += 1
+                update_map = true
             }
         }
+        if (!(update_map)) {
+            pause(50)
+            continue;
+        }
         set_map(current_map)
-        update_map_title = false
+        update_map = false
         sprite_map_title.setImage(assets.image`map_title_template`)
         if (current_map == 0) {
             sprite_map_title.image.fillRect(3, 4, 4, 8, 15)
@@ -309,8 +324,16 @@ function select_map () {
             sprite_map_title.image.fillRect(153, 4, 4, 8, 15)
         }
         images.print(sprite_map_title.image, map_names[current_map], 10, 4, 1)
+        TilemapPath.stop_follow_path(sprite_map_sel_cam)
+        tiles.placeOnTile(sprite_map_sel_cam, TilemapPath.get_path(map_sel_anim_path)[0])
+        timer.background(function () {
+            TilemapPath.follow_path(sprite_map_sel_cam, map_sel_anim_path, 50)
+        })
+        pause(50)
     }
     sprite_map_title.ay = 500
+    TilemapPath.stop_follow_path(sprite_map_sel_cam)
+    sprite_map_sel_cam.destroy()
 }
 function set_beautiful_beach_map () {
     scene.setBackgroundColor(13)
@@ -618,8 +641,14 @@ function update_tack_shooter (tower: Sprite) {
     }
 }
 TilemapPath.on_sprite_finishes_path(function (sprite) {
-    info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
-    sprite.destroy()
+    if (sprite.kind() == SpriteKind.Player) {
+        timer.background(function () {
+            TilemapPath.follow_path(sprite, map_sel_anim_path, 50)
+        })
+    } else {
+        info.changeLifeBy(sprites.readDataNumber(sprite, "health") * -1)
+        sprite.destroy()
+    }
 })
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     if (enable_controls) {
@@ -779,7 +808,9 @@ let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
 let round_code = ""
-let update_map_title = false
+let map_sel_anim_path: TilemapPath.TilemapPath = null
+let sprite_map_sel_cam: Sprite = null
+let update_map = false
 let sprite_map_title: Sprite = null
 let map_names: string[] = []
 let farthest_along_bloon: Sprite = null
