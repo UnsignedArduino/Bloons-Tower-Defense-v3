@@ -7,6 +7,17 @@ namespace StatusBarKind {
 function on_land_tile () {
     return land_tiles.indexOf(tiles.getTileAtLocation(tiles.locationOfSprite(sprite_cursor_pointer))) != -1
 }
+function stop_cut () {
+    sprite_cut_screen.ay = -500
+    while (sprite_cut_screen.bottom > 0) {
+        pause(0)
+    }
+    sprite_cut_screen.ay = 0
+    sprite_cut_screen.vy = 0
+    sprite_cut_screen.bottom = 0
+    pause(100)
+    sprite_cut_screen.destroy()
+}
 function update_sniper_monkey (tower: Sprite) {
     sprite_target = get_farthest_along_path_bloon(tower)
     if (!(sprite_target)) {
@@ -30,6 +41,21 @@ function update_sniper_monkey (tower: Sprite) {
 function update_cursor () {
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
+}
+function start_cut () {
+    sprite_cut_screen = sprites.create(assets.image`black_screen`, SpriteKind.Player)
+    sprite_cut_screen.setFlag(SpriteFlag.Ghost, true)
+    sprite_cut_screen.setFlag(SpriteFlag.RelativeToCamera, true)
+    sprite_cut_screen.left = 0
+    sprite_cut_screen.bottom = 0
+    sprite_cut_screen.z = 1000
+    sprite_cut_screen.ay = 500
+    while (sprite_cut_screen.bottom < scene.screenHeight()) {
+        pause(0)
+    }
+    sprite_cut_screen.ay = 0
+    sprite_cut_screen.vy = 0
+    sprite_cut_screen.bottom = scene.screenHeight()
 }
 function set_variables () {
     in_game = false
@@ -193,7 +219,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
                         pause(0)
                     }
                     while (blockMenu.isMenuOpen()) {
-                        sprite_tower.say("" + si_ify_number(sprites.readDataNumber(sprite_tower, "total_pops"), 2) + " pops" + "" + "" + "")
+                        sprite_tower.say("" + si_ify_number(sprites.readDataNumber(sprite_tower, "total_pops"), 2) + " pops")
                         pause(100)
                     }
                     sprite_tower.say("")
@@ -962,12 +988,29 @@ let sprite_cursor: Sprite = null
 let sprite_projectile: Sprite = null
 let target_angle = 0
 let sprite_target: Sprite = null
+let sprite_cut_screen: Sprite = null
 let sprite_cursor_pointer: Sprite = null
 let land_tiles: Image[] = []
 let in_game = false
 let current_map = 0
 stats.turnStats(true)
 set_variables()
+// "Bloons TD3" font is "Luckiest Guy"
+// "Play" button font is "Aclonica"
+scene.setBackgroundImage(assets.image`start_screen`)
+images.print(scene.backgroundImage(), "Bloons Tower Defense v3", 4, 4, 1)
+images.print(scene.backgroundImage(), "By Unsigned_Arduino", 4, 14, 1)
+images.print(scene.backgroundImage(), "Press [A] to begin", 4, 34, 1)
+while (!(controller.A.isPressed())) {
+    pause(20)
+}
+start_cut()
+pause(100)
+scene.setBackgroundImage(assets.image`blank_background`)
+pause(100)
+timer.background(function () {
+    stop_cut()
+})
 select_map()
 set_map(current_map)
 pause(0)
