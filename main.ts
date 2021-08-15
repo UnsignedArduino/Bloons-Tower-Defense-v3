@@ -998,6 +998,7 @@ set_variables()
 // "Bloons TD3" font is "Luckiest Guy"
 // "Play" button font is "Aclonica"
 scene.setBackgroundImage(assets.image`start_screen`)
+scene.backgroundImage().fillRect(0, 0, 160, 46, 15)
 images.print(scene.backgroundImage(), "Bloons Tower Defense v3", 4, 4, 1)
 images.print(scene.backgroundImage(), "By Unsigned_Arduino", 4, 14, 1)
 images.print(scene.backgroundImage(), "Press [A] to begin", 4, 34, 1)
