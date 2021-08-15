@@ -34,7 +34,7 @@ function update_cursor () {
 function set_variables () {
     in_game = false
     in_round = false
-    max_map = 1
+    max_map = 2
     current_map = 0
     round_number = 1
     enable_controls = true
@@ -116,6 +116,49 @@ function set_game_variables () {
     game_lose_on_0_lives = true
     lots_of_money = false
     dart_angle_precision = 60
+}
+function finish_dark_dungeons () {
+    land_tiles = [
+    sprites.dungeon.darkGroundWest,
+    sprites.dungeon.darkGroundNorthWest0,
+    sprites.dungeon.darkGroundSouthWest0,
+    sprites.dungeon.darkGroundNorthEast0,
+    sprites.dungeon.darkGroundSouthEast0,
+    sprites.dungeon.darkGroundEast,
+    sprites.dungeon.darkGroundSouthWest1,
+    sprites.dungeon.darkGroundNorth,
+    sprites.dungeon.darkGroundSouthEast1,
+    sprites.dungeon.darkGroundNorthEast1,
+    sprites.dungeon.darkGroundSouth,
+    sprites.dungeon.darkGroundNorthWest1
+    ]
+    water_tiles = [sprites.dungeon.hazardLava0, sprites.dungeon.hazardLava1]
+    spawn_locations = [tiles.getTileLocation(8, 7), tiles.getTileLocation(11, 7)]
+    bloon_paths = []
+    bloon_paths.push(TilemapPath.create_path([
+    tiles.getTileLocation(8, 7),
+    tiles.getTileLocation(2, 7),
+    tiles.getTileLocation(2, 2),
+    tiles.getTileLocation(17, 2),
+    tiles.getTileLocation(17, 7),
+    tiles.getTileLocation(12, 7),
+    tiles.getTileLocation(12, 5),
+    tiles.getTileLocation(7, 5),
+    tiles.getTileLocation(7, 7),
+    tiles.getTileLocation(1, 7)
+    ]))
+    bloon_paths.push(TilemapPath.create_path([
+    tiles.getTileLocation(11, 7),
+    tiles.getTileLocation(17, 7),
+    tiles.getTileLocation(17, 12),
+    tiles.getTileLocation(2, 12),
+    tiles.getTileLocation(2, 7),
+    tiles.getTileLocation(7, 7),
+    tiles.getTileLocation(7, 9),
+    tiles.getTileLocation(12, 9),
+    tiles.getTileLocation(12, 7),
+    tiles.getTileLocation(18, 7)
+    ]))
 }
 function update_dart_monkey (tower: Sprite) {
     sprite_target = get_farthest_along_path_bloon(tower)
@@ -277,7 +320,7 @@ function get_farthest_along_path_bloon (tower: Sprite) {
 }
 function select_map () {
     current_map = 0
-    map_names = ["Walk in the Park", "Beautiful Beach"]
+    map_names = ["Walk in the Park", "Beautiful Beach", "Dark Dungeons"]
     set_map(current_map)
     sprite_map_title = sprites.create(assets.image`map_title_template`, SpriteKind.Player)
     sprite_map_title.left = 0
@@ -304,7 +347,7 @@ function select_map () {
     ])
     while (!(controller.A.isPressed())) {
         if (!(controller.anyButton.isPressed()) && !(update_map)) {
-            pause(50)
+            pause(20)
             continue;
         }
         if (controller.left.isPressed()) {
@@ -319,7 +362,7 @@ function select_map () {
             }
         }
         if (!(update_map)) {
-            pause(50)
+            pause(100)
             continue;
         }
         set_map(current_map)
@@ -336,7 +379,7 @@ function select_map () {
         timer.background(function () {
             TilemapPath.follow_path(sprite_map_sel_cam, map_sel_anim_path, 50)
         })
-        pause(50)
+        pause(100)
     }
     sprite_map_title.ay = 500
     sprite_map_sel_title.ay = -500
@@ -354,6 +397,10 @@ function enable_cursor_movement (en: boolean) {
     } else {
         controller.moveSprite(sprite_cursor_pointer, 0, 0)
     }
+}
+function set_dark_dungeons () {
+    scene.setBackgroundColor(12)
+    tiles.setTilemap(tilemap`dark_dungeons`)
 }
 function round_number_to_round_code (number: number) {
     round_code = ""
@@ -413,10 +460,29 @@ function finish_tilemap () {
     sprites.castle.rock2,
     sprites.swamp.swampTile2,
     sprites.swamp.swampTile3,
-    sprites.swamp.swampTile0
+    sprites.swamp.swampTile0,
+    sprites.dungeon.greenOuterNorthWest,
+    sprites.dungeon.greenOuterNorth0,
+    sprites.dungeon.greenOuterNorthEast,
+    sprites.dungeon.greenOuterEast0,
+    sprites.dungeon.greenOuterSouthWest,
+    sprites.dungeon.greenOuterSouth1,
+    sprites.dungeon.greenOuterSouthEast,
+    sprites.dungeon.greenOuterWest0,
+    sprites.dungeon.doorOpenWest,
+    sprites.dungeon.doorOpenEast,
+    sprites.dungeon.greenOuterNorth1,
+    sprites.dungeon.greenOuterEast1,
+    sprites.dungeon.greenOuterSouth0,
+    sprites.dungeon.greenOuterWest1,
+    sprites.dungeon.greenOuterNorth2,
+    sprites.dungeon.greenOuterEast2,
+    sprites.dungeon.greenOuterSouth2,
+    sprites.dungeon.greenOuterWest2
     ]) {
         for (let location of tiles.getTilesByType(tile)) {
             tiles.setWallAt(location, true)
+            pause(0)
         }
     }
 }
@@ -590,6 +656,8 @@ function set_map (index: number) {
         set_walk_in_the_park_map()
     } else if (index == 1) {
         set_beautiful_beach_map()
+    } else if (index == 2) {
+        set_dark_dungeons()
     }
 }
 function bloon_hp_to_speed (hp: number) {
@@ -693,6 +761,8 @@ function finish_map_loading (index: number) {
         finish_walk_in_the_park_map()
     } else if (index == 1) {
         finish_beautiful_beach_map()
+    } else if (index == 2) {
+        finish_dark_dungeons()
     }
 }
 function is_overlapping_kind (target: Sprite, kind: number) {
@@ -813,9 +883,6 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
 let sprite_bloon: Sprite = null
 let path_index = 0
 let menu_selected = false
-let bloon_paths: TilemapPath.TilemapPath[] = []
-let spawn_locations: tiles.Location[] = []
-let water_tiles: Image[] = []
 let round_code = ""
 let map_sel_anim_path: TilemapPath.TilemapPath = null
 let sprite_map_sel_cam: Sprite = null
@@ -830,6 +897,9 @@ let sprite_water_icon: Sprite = null
 let sprite_land_icon: Sprite = null
 let sprite_tower: Sprite = null
 let projectile_images: Image[][] = []
+let bloon_paths: TilemapPath.TilemapPath[] = []
+let spawn_locations: tiles.Location[] = []
+let water_tiles: Image[] = []
 let dart_angle_precision = 0
 let lots_of_money = false
 let game_lose_on_0_lives = false
