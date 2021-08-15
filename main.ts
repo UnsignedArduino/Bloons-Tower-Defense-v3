@@ -478,7 +478,8 @@ function finish_tilemap () {
     sprites.dungeon.greenOuterNorth2,
     sprites.dungeon.greenOuterEast2,
     sprites.dungeon.greenOuterSouth2,
-    sprites.dungeon.greenOuterWest2
+    sprites.dungeon.greenOuterWest2,
+    assets.tile`dungeon_bloon_spawner`
     ]) {
         for (let location of tiles.getTilesByType(tile)) {
             tiles.setWallAt(location, true)
