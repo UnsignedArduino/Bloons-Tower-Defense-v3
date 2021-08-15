@@ -402,43 +402,82 @@ function set_dark_dungeons () {
     scene.setBackgroundColor(12)
     tiles.setTilemap(tilemap`dark_dungeons`)
 }
+// round_number = 0
+// round_code = ""
+// 
+// if round_number % 5 == 0:
+//     first_to_spawn = 20
+//     second_to_spawn = 0
+//     gap = "   "
+// if round_number % 5 == 1:
+//     first_to_spawn = 30
+//     second_to_spawn = 0
+//     gap = "  "
+// if round_number % 5 == 2:
+//     first_to_spawn = 40
+//     second_to_spawn = 10
+//     gap = "  "
+// if round_number % 5 == 3:
+//     first_to_spawn = 80
+//     second_to_spawn = 20
+//     gap = " "
+// if round_number % 5 == 4:
+//     first_to_spawn = 90
+//     second_to_spawn = 50
+//     gap = " "
+// 
+// all_bloons = ["a", "b", "c"]
+// 
+// first_bloon = all_bloons[min(round_number // 5, len(all_bloons) - 1)]
+// second_bloon = all_bloons[min((round_number // 5) + 1, len(all_bloons) - 1)]
+// 
+// while True:
+//     if first_to_spawn > 0:
+//         round_code += first_bloon + gap
+//         first_to_spawn -= 1
+//         continue
+//     elif second_to_spawn > 0:
+//         round_code += second_bloon + gap
+//         second_to_spawn -= 1
+//         continue
+//     else:
+//         break
+// 
+// return round_code
+// 
 function round_number_to_round_code (number: number) {
     round_code = ""
-    if (number == 1) {
-        for (let index = 0; index < 20; index++) {
-            round_code = "" + round_code + "a  "
-        }
-    } else if (number == 2) {
-        for (let index = 0; index < 30; index++) {
-            round_code = "" + round_code + "a  "
-        }
-    } else if (number == 3) {
-        for (let index = 0; index < 50; index++) {
-            round_code = "" + round_code + "a  "
-        }
-    } else if (number == 4) {
-        for (let index = 0; index < 2; index++) {
-            for (let index = 0; index < 10; index++) {
-                round_code = "" + round_code + "a "
-            }
-            for (let index = 0; index < 5; index++) {
-                round_code = "" + round_code + "b  "
-            }
-        }
-    } else if (number == 5) {
-        for (let index = 0; index < 10; index++) {
-            round_code = "" + round_code + "b  "
-        }
-        for (let index = 0; index < 10; index++) {
-            round_code = "" + round_code + "a "
-        }
-        for (let index = 0; index < 20; index++) {
-            round_code = "" + round_code + "b  "
-        }
-    } else {
-        for (let index = 0; index < number * 15; index++) {
-            round_code = "" + round_code + "c"
-        }
+    if (number % 5 == 0) {
+        round_first_to_spawn = 20
+        round_second_to_spawn = 0
+        round_gap = "   "
+    } else if (number % 5 == 1) {
+        round_first_to_spawn = 30
+        round_second_to_spawn = 0
+        round_gap = "  "
+    } else if (number % 5 == 2) {
+        round_first_to_spawn = 40
+        round_second_to_spawn = 10
+        round_gap = "  "
+    } else if (number % 5 == 3) {
+        round_first_to_spawn = 80
+        round_second_to_spawn = 20
+        round_gap = " "
+    } else if (number % 5 == 4) {
+        round_first_to_spawn = 90
+        round_second_to_spawn = 50
+        round_gap = " "
+    }
+    round_first_to_spawn = round_first_to_spawn * Math.idiv(number, 10)
+    round_second_to_spawn = round_second_to_spawn * Math.idiv(number, 10)
+    all_bloons = ["a", "b", "c"]
+    round_first_bloon = all_bloons[Math.min(Math.idiv(number, 5), all_bloons.length - 1)]
+    round_second_bloon = all_bloons[Math.min(Math.idiv(number, 5) + 1, all_bloons.length - 1)]
+    for (let index = 0; index < round_first_to_spawn; index++) {
+        round_code = "" + round_code + round_first_bloon + round_gap
+    }
+    for (let index = 0; index < round_second_to_spawn; index++) {
+        round_code = "" + round_code + round_second_bloon + round_gap
     }
     return round_code
 }
@@ -884,6 +923,12 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
 let sprite_bloon: Sprite = null
 let path_index = 0
 let menu_selected = false
+let round_second_bloon = ""
+let round_first_bloon = ""
+let all_bloons: string[] = []
+let round_gap = ""
+let round_second_to_spawn = 0
+let round_first_to_spawn = 0
 let round_code = ""
 let map_sel_anim_path: TilemapPath.TilemapPath = null
 let sprite_map_sel_cam: Sprite = null
