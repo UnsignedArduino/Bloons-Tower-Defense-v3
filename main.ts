@@ -751,7 +751,7 @@ function summon_tack_shooter (x: number, y: number) {
     sprites.setDataNumber(sprite_tower, "total_price", 30)
     sprites.setDataNumber(sprite_tower, "total_pops", 0)
     set_firing_data__tower_basic_inc_best_price_mul(sprite_tower, 500, -100, 100, 25, 1.5)
-    set_range_data__tower_basic_inc_best_price_mul(sprite_tower, 16, 8, 32, 40, 1.75)
+    set_range_data__tower_basic_inc_best_price_mul(sprite_tower, 24, 8, 64, 40, 1.4)
     set_dart_data__tower_type_basic_inc_best_price_mul_speed(sprite_tower, 2, 1, 1, 5, 25, 1.4, 500)
     sprite_tower.setPosition(x, y)
     sprite_tower.z = 30
