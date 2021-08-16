@@ -500,7 +500,13 @@ function round_number_to_round_code (number: number) {
     }
     round_first_to_spawn = round_first_to_spawn * Math.idiv(number, 10)
     round_second_to_spawn = round_second_to_spawn * Math.idiv(number, 10)
-    all_bloons = ["a", "b", "c"]
+    all_bloons = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e"
+    ]
     round_first_bloon = all_bloons[Math.min(Math.idiv(number, 5), all_bloons.length - 1)]
     round_second_bloon = all_bloons[Math.min(Math.idiv(number, 5) + 1, all_bloons.length - 1)]
     for (let index = 0; index < round_first_to_spawn; index++) {
@@ -768,6 +774,10 @@ function run_round (round_code: string, delay: number) {
             summon_bloon(2)
         } else if (round_code.charAt(index) == "c") {
             summon_bloon(3)
+        } else if (round_code.charAt(index) == "d") {
+            summon_bloon(4)
+        } else if (round_code.charAt(index) == "e") {
+            summon_bloon(5)
         } else {
             pause(delay)
         }
