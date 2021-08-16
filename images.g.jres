@@ -114,6 +114,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "yellow_bloon"
     },
+    "image6": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzMwAAAAAAMDMzMwAAAAAzMzMzAwAAADMzMzMz/wD/MzMzMzMA/wAzMzMzAwAAADAzMzMAAAAAADMzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "pink_bloon"
+    },
     ",$P0+aKdWY?bB_ViI*8/": {
         "namespace": "myImages",
         "id": ",$P0+aKdWY?bB_ViI*8/",

@@ -262,6 +262,8 @@ function bloon_hp_to_image (hp: number) {
         return assets.image`green_bloon`
     } else if (hp == 4) {
         return assets.image`yellow_bloon`
+    } else if (hp == 5) {
+        return assets.image`pink_bloon`
     } else {
         return assets.image`test_bloon`
     }
@@ -737,6 +739,8 @@ function bloon_hp_to_speed (hp: number) {
         return 50 * 1.8
     } else if (hp == 4) {
         return 50 * 3.2
+    } else if (hp == 5) {
+        return 50 * 3.5
     } else {
         return 50 * 1
     }
