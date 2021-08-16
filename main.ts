@@ -321,27 +321,30 @@ function tower_right_click (tower: Sprite) {
     } else if (blockMenu.selectedMenuOption().includes("firing delay")) {
         if (info.score() >= Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul"))) {
             tower.startEffect(effects.halo, 500)
-            info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul")) * -1)
             sprites.changeDataNumberBy(tower, "firing_speed", sprites.readDataNumber(tower, "firing_speed_inc"))
-            sprites.changeDataNumberBy(tower, "total_price", Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul")))
+            sprites.setDataNumber(tower, "firing_speed_price", Math.round(sprites.readDataNumber(tower, "firing_speed_price") * sprites.readDataNumber(tower, "firing_speed_price_mul")))
+            info.changeScoreBy(sprites.readDataNumber(tower, "firing_speed_price") * -1)
+            sprites.changeDataNumberBy(tower, "total_price", sprites.readDataNumber(tower, "firing_speed_price"))
         } else {
             game.showLongText("Not enough money!", DialogLayout.Bottom)
         }
     } else if (blockMenu.selectedMenuOption().includes("range")) {
         if (info.score() >= Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul"))) {
             tower.startEffect(effects.halo, 500)
-            info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul")) * -1)
             sprites.changeDataNumberBy(tower, "range", sprites.readDataNumber(tower, "range_inc"))
-            sprites.changeDataNumberBy(tower, "total_price", Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul")))
+            sprites.setDataNumber(tower, "range_price", Math.round(sprites.readDataNumber(tower, "range_price") * sprites.readDataNumber(tower, "range_price_mul")))
+            info.changeScoreBy(sprites.readDataNumber(tower, "range_price") * -1)
+            sprites.changeDataNumberBy(tower, "total_price", sprites.readDataNumber(tower, "range_price"))
         } else {
             game.showLongText("Not enough money!", DialogLayout.Bottom)
         }
     } else if (blockMenu.selectedMenuOption().includes("piercing")) {
         if (info.score() >= Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul"))) {
             tower.startEffect(effects.halo, 500)
-            info.changeScoreBy(Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul")) * -1)
             sprites.changeDataNumberBy(tower, "dart_health", sprites.readDataNumber(tower, "dart_health_inc"))
-            sprites.changeDataNumberBy(tower, "total_price", Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul")))
+            sprites.setDataNumber(tower, "dart_health_price", Math.round(sprites.readDataNumber(tower, "dart_health_price") * sprites.readDataNumber(tower, "dart_health_price_mul")))
+            info.changeScoreBy(sprites.readDataNumber(tower, "dart_health_price") * -1)
+            sprites.changeDataNumberBy(tower, "total_price", sprites.readDataNumber(tower, "dart_health_price"))
         } else {
             game.showLongText("Not enough money!", DialogLayout.Bottom)
         }
