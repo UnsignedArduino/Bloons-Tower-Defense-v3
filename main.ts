@@ -39,6 +39,9 @@ function update_sniper_monkey (tower: Sprite) {
     }
 }
 function update_cursor () {
+    if (!(sprite_cursor) || !(sprite_cursor_pointer)) {
+        return
+    }
     sprite_cursor.top = sprite_cursor_pointer.top
     sprite_cursor.left = sprite_cursor_pointer.left
 }
@@ -498,8 +501,8 @@ function round_number_to_round_code (number: number) {
         round_second_to_spawn = 50
         round_gap = " "
     }
-    round_first_to_spawn = round_first_to_spawn * Math.idiv(number, 10)
-    round_second_to_spawn = round_second_to_spawn * Math.idiv(number, 10)
+    round_first_to_spawn = round_first_to_spawn * (Math.idiv(number, 10) + 1)
+    round_second_to_spawn = round_second_to_spawn * (Math.idiv(number, 10) + 1)
     all_bloons = [
     "a",
     "b",
@@ -826,6 +829,35 @@ info.onLifeZero(function () {
         game.over(false)
     }
 })
+function animate_start_screen () {
+    summon_dart_monkey(130, 0)
+    sprite_tower.bottom = 112
+    sprite_tower.setKind(SpriteKind.Player)
+    timer.after(1500, function () {
+        timer.background(function () {
+            while (!(spriteutils.isDestroyed(sprite_tower))) {
+                sprite_projectile = sprites.create(assets.image`dart`, SpriteKind.Projectile)
+                sprite_projectile.setPosition(sprite_tower.x, sprite_tower.y)
+                sprite_projectile.z = 20
+                sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(sprite_tower, "dart_health"))
+                sprites.setDataSprite(sprite_projectile, "parent", sprite_tower)
+                sprite_projectile.vx = -100
+                pause(500)
+            }
+        })
+    })
+    timer.background(function () {
+        while (!(spriteutils.isDestroyed(sprite_tower))) {
+            sprite_bloon = sprites.create(bloon_hp_to_image(1), SpriteKind.Enemy)
+            sprite_bloon.right = 0
+            sprite_bloon.bottom = 112
+            sprite_bloon.z = 10
+            sprite_bloon.vx = 50
+            sprites.setDataNumber(sprite_bloon, "health", 1)
+            pause(500)
+        }
+    })
+}
 function summon_tack_shooter (x: number, y: number) {
     sprite_tower = sprites.create(assets.image`tack_shooter`, SpriteKind.Tower)
     sprites.setDataNumber(sprite_tower, "id", tower_id)
@@ -858,6 +890,12 @@ function is_overlapping_kind (target: Sprite, kind: number) {
     return false
 }
 function update_cursor_icons () {
+    if (!(sprite_cursor)) {
+        return
+    }
+    if (!(sprite_water_icon) || !(sprite_land_icon)) {
+        return
+    }
     sprite_land_icon.left = sprite_cursor.right + 2
     sprite_land_icon.top = sprite_cursor.top
     sprite_water_icon.left = sprite_cursor.right + 2
@@ -917,6 +955,11 @@ function new_land_tower () {
         game.showLongText("Not enough money!", DialogLayout.Bottom)
     }
 }
+function stop_animate_start_screen () {
+    sprite_tower.destroy()
+    tiles.destroySpritesOfKind(SpriteKind.Projectile)
+    tiles.destroySpritesOfKind(SpriteKind.Enemy)
+}
 function summon_bloon (hp: number) {
     path_index = randint(0, spawn_locations.length - 1)
     sprite_bloon = sprites.create(bloon_hp_to_image(hp), SpriteKind.Enemy)
@@ -958,14 +1001,16 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
     }
     if (sprites.readDataNumber(otherSprite, "health") <= 0) {
         otherSprite.destroy()
-        info.changeScoreBy(1)
+        if (in_game) {
+            info.changeScoreBy(1)
+        }
         sprites.changeDataNumberBy(sprites.readDataSprite(sprite, "parent"), "total_pops", 1)
     } else {
         otherSprite.setImage(bloon_hp_to_image(sprites.readDataNumber(otherSprite, "health")))
     }
 })
-let sprite_bloon: Sprite = null
 let path_index = 0
+let sprite_bloon: Sprite = null
 let menu_selected = false
 let round_second_bloon = ""
 let round_first_bloon = ""
@@ -1013,38 +1058,42 @@ let in_game = false
 let current_map = 0
 stats.turnStats(true)
 set_variables()
-// "Bloons TD3" font is "Luckiest Guy"
-// "Play" button font is "Aclonica"
-scene.setBackgroundImage(assets.image`start_screen`)
-scene.backgroundImage().fillRect(0, 0, 160, 46, 15)
-images.print(scene.backgroundImage(), "Bloons Tower Defense v3", 4, 4, 1)
-images.print(scene.backgroundImage(), "By Unsigned_Arduino", 4, 14, 1)
-images.print(scene.backgroundImage(), "Press [A] to begin", 4, 34, 1)
-while (!(controller.A.isPressed())) {
-    pause(20)
-}
-start_cut()
-pause(100)
-scene.setBackgroundImage(assets.image`blank_background`)
-pause(100)
 timer.background(function () {
-    stop_cut()
-})
-select_map()
-set_map(current_map)
-pause(0)
-start_loading()
-pause(0)
-finish_map_loading(current_map)
-pause(0)
-game_init()
-pause(0)
-in_game = true
-timer.background(function () {
-    stop_loading()
-    Notification.cancelNotification()
-    Notification.waitForNotificationFinish()
-    Notification.notify("Press menu to start the round")
+    // "Bloons TD3" font is "Luckiest Guy"
+    // "Play" button font is "Aclonica"
+    scene.setBackgroundImage(assets.image`start_screen`)
+    scene.backgroundImage().fillRect(0, 0, 160, 46, 15)
+    images.print(scene.backgroundImage(), "Bloons Tower Defense v3", 4, 4, 1)
+    images.print(scene.backgroundImage(), "By Unsigned_Arduino", 4, 14, 1)
+    images.print(scene.backgroundImage(), "Press [A] to begin", 4, 34, 1)
+    animate_start_screen()
+    while (!(controller.A.isPressed())) {
+        pause(20)
+    }
+    start_cut()
+    pause(100)
+    scene.setBackgroundImage(assets.image`blank_background`)
+    stop_animate_start_screen()
+    pause(100)
+    timer.background(function () {
+        stop_cut()
+    })
+    select_map()
+    set_map(current_map)
+    pause(0)
+    start_loading()
+    pause(0)
+    finish_map_loading(current_map)
+    pause(0)
+    game_init()
+    pause(0)
+    in_game = true
+    timer.background(function () {
+        stop_loading()
+        Notification.cancelNotification()
+        Notification.waitForNotificationFinish()
+        Notification.notify("Press menu to start the round")
+    })
 })
 game.onUpdate(function () {
     update_cursor()
