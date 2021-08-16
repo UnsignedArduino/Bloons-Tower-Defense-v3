@@ -119,6 +119,11 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "start_screen"
     },
+    "image7": {
+        "data": "hwQZABQAAAAAAAAAAADwDwAAAAAAAAAAAADP/AAAAAAAAAAAAADP/AAAAAAAAAAAAADP/AAAAAAAAAAAAADPzA8AAAAAAAAAAADwzA8AAAAA/wAAAADw/P4AAAAA/w/AzADw/OwPAAAA8M/czQ8A/8z+AAAA/9/tzf0A/87+AADw///vzf3w/+78AAD//9/dzf3v/87+AAAf8d/d3P3+/8z8AAAfEf/f3f3+/+z+AAAf8d/d3e7u/s7+AAD//+/u7u7+/87+AADw/+/u7u/u/u78AAAA//+9++/u/s78AAAA8P/dzfDu/s7+AAAA/w/PDADv/sz+AAAA/wAA8P///87+AAAAAAAA7+7+8M7+AAAAAAAA//8P8MwPAAAAAAAAAAAA8P4AAAAAAAAAAAAAAA8AAAA=",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "monkey_buccaneer_left"
+    },
     ",$P0+aKdWY?bB_ViI*8/": {
         "namespace": "myImages",
         "id": ",$P0+aKdWY?bB_ViI*8/",

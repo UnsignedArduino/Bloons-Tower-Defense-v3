@@ -285,6 +285,20 @@ function summon_sniper_monkey (x: number, y: number) {
     sprite_tower.setPosition(x, y)
     sprite_tower.z = 30
 }
+function summon_monkey_buccaneer (x: number, y: number) {
+    sprite_tower = sprites.create(assets.image`monkey_buccaneer_left`, SpriteKind.Tower)
+    sprites.setDataNumber(sprite_tower, "id", tower_id)
+    tower_id += 1
+    sprites.setDataString(sprite_tower, "type", "monkey_buccaneer")
+    sprites.setDataBoolean(sprite_tower, "facing_left", true)
+    sprites.setDataNumber(sprite_tower, "total_price", 50)
+    sprites.setDataNumber(sprite_tower, "total_pops", 0)
+    set_firing_data__tower_basic_inc_best_price_mul(sprite_tower, 1000, -200, 200, 50, 1.2)
+    set_range_data__tower_basic_inc_best_price_mul(sprite_tower, 40, 8, 80, 60, 1.2)
+    set_dart_data__tower_type_basic_inc_best_price_mul_speed(sprite_tower, 1, 1, 1, 4, 20, 1.4, 200)
+    sprite_tower.setPosition(x, y)
+    sprite_tower.z = 30
+}
 function tower_right_click (tower: Sprite) {
     menu_options = ["Cancel"]
     menu_options.push("Sell for " + Math.round(sprites.readDataNumber(tower, "total_price") * 0.8) + "$")
@@ -722,10 +736,13 @@ function summon_dart_monkey (x: number, y: number) {
     sprite_tower.z = 30
 }
 function new_water_tower () {
-    blockMenu.showMenu(["Cancel"], MenuStyle.List, MenuLocation.BottomHalf)
+    blockMenu.showMenu(["Cancel", "Monkey Buccaneer ($50)"], MenuStyle.List, MenuLocation.BottomHalf)
     wait_for_menu_select(true)
     if (blockMenu.selectedMenuIndex() == 0) {
         return
+    } else if (blockMenu.selectedMenuIndex() == 1 && info.score() >= 50) {
+        info.changeScoreBy(-50)
+        summon_monkey_buccaneer(sprite_cursor_pointer.x, sprite_cursor_pointer.y)
     } else {
         game.showLongText("Not enough money!", DialogLayout.Bottom)
     }
@@ -753,6 +770,28 @@ function bloon_hp_to_speed (hp: number) {
     } else {
         return 50 * 1
     }
+}
+function update_monkey_buccaneer (tower: Sprite) {
+    sprite_target = get_farthest_along_path_bloon(tower)
+    if (!(sprite_target)) {
+        return
+    }
+    target_angle = spriteutils.angleFrom(tower, sprite_target)
+    update_tower_image(tower, spriteutils.radiansToDegrees(target_angle) - 90)
+    sprite_projectile = sprites.create(get_projectile_image(sprites.readDataNumber(tower, "dart_type"), spriteutils.radiansToDegrees(target_angle) + 180), SpriteKind.Projectile)
+    sprite_projectile.setPosition(tower.x, tower.y)
+    sprite_projectile.z = 20
+    sprite_projectile.setFlag(SpriteFlag.DestroyOnWall, true)
+    sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(tower, "dart_health"))
+    sprites.setDataSprite(sprite_projectile, "parent", tower)
+    spriteutils.setVelocityAtAngle(sprite_projectile, target_angle, sprites.readDataNumber(tower, "dart_speed"))
+    sprite_projectile = sprites.create(get_projectile_image(sprites.readDataNumber(tower, "dart_type"), spriteutils.radiansToDegrees(target_angle) + 360), SpriteKind.Projectile)
+    sprite_projectile.setPosition(tower.x, tower.y)
+    sprite_projectile.z = 20
+    sprite_projectile.setFlag(SpriteFlag.DestroyOnWall, true)
+    sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(tower, "dart_health"))
+    sprites.setDataSprite(sprite_projectile, "parent", tower)
+    spriteutils.setVelocityAtAngle(sprite_projectile, target_angle + 3.14159, sprites.readDataNumber(tower, "dart_speed"))
 }
 function new_tower_menu () {
     if (on_water_tile()) {
@@ -1112,6 +1151,10 @@ game.onUpdate(function () {
         } else if (sprites.readDataString(sprite_tower, "type") == "tack_shooter") {
             timer.throttle("update_tack_shooter" + sprites.readDataNumber(sprite_tower, "id"), sprites.readDataNumber(sprite_tower, "firing_speed"), function () {
                 update_tack_shooter(sprite_tower)
+            })
+        } else if (sprites.readDataString(sprite_tower, "type") == "monkey_buccaneer") {
+            timer.throttle("update_monkey_buccaneer" + sprites.readDataNumber(sprite_tower, "id"), sprites.readDataNumber(sprite_tower, "firing_speed"), function () {
+                update_monkey_buccaneer(sprite_tower)
             })
         }
     }
