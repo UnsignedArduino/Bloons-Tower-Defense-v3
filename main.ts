@@ -1015,6 +1015,16 @@ function summon_bloon (hp: number) {
 blockMenu.onMenuOptionSelected(function (option, index) {
     menu_selected = true
 })
+function type_text_to_image (image2: Image, text: string, x: number, y: number, color: number, speed: number) {
+    for (let index = 0; index <= text.length; index++) {
+        images.print(image2, text.substr(0, index), x, y, color)
+        if (controller.A.isPressed()) {
+            break;
+        }
+        pause(speed)
+    }
+    images.print(image2, text, x, y, color)
+}
 function finish_beautiful_beach_map () {
     land_tiles = [assets.tile`sand_left`, sprites.castle.tilePath5]
     water_tiles = [assets.tile`water`]
@@ -1105,10 +1115,10 @@ timer.background(function () {
     // "Play" button font is "Aclonica"
     scene.setBackgroundImage(assets.image`start_screen`)
     scene.backgroundImage().fillRect(0, 0, 160, 46, 15)
-    images.print(scene.backgroundImage(), "Bloons Tower Defense v3", 4, 4, 1)
-    images.print(scene.backgroundImage(), "By Unsigned_Arduino", 4, 14, 1)
-    images.print(scene.backgroundImage(), "Press [A] to begin", 4, 34, 1)
     animate_start_screen()
+    type_text_to_image(scene.backgroundImage(), "Bloons Tower Defense v3", 4, 4, images.colorBlock(1), 20)
+    type_text_to_image(scene.backgroundImage(), "By Unsigned_Arduino", 4, 14, images.colorBlock(1), 20)
+    type_text_to_image(scene.backgroundImage(), "Press [A] to begin", 4, 34, images.colorBlock(1), 20)
     while (!(controller.A.isPressed())) {
         pause(20)
     }
