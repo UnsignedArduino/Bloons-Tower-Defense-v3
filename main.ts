@@ -66,8 +66,10 @@ function set_variables () {
     max_map = 2
     current_map = 0
     round_number = 1
+    game_lose_on_0_lives = true
+    lots_of_money = false
+    dart_angle_precision = 60
     enable_controls = true
-    set_game_variables()
     tower_id = 0
 }
 function start_loading () {
@@ -140,11 +142,6 @@ function get_overlapping_sprite (target: Sprite, kind: number) {
         }
     }
     return [][0]
-}
-function set_game_variables () {
-    game_lose_on_0_lives = true
-    lots_of_money = false
-    dart_angle_precision = 60
 }
 function finish_dark_dungeons () {
     land_tiles = [
@@ -1087,15 +1084,15 @@ let projectile_images: Image[][] = []
 let bloon_paths: TilemapPath.TilemapPath[] = []
 let spawn_locations: tiles.Location[] = []
 let water_tiles: Image[] = []
-let dart_angle_precision = 0
-let lots_of_money = false
-let game_lose_on_0_lives = false
 let sprite_round_status: StatusBarSprite = null
 let sprite_shader: Sprite = null
 let sprite_loading_icon: Sprite = null
 let sprite_loading_screen: Sprite = null
 let tower_id = 0
 let enable_controls = false
+let dart_angle_precision = 0
+let lots_of_money = false
+let game_lose_on_0_lives = false
 let round_number = 0
 let max_map = 0
 let in_round = false
