@@ -88,6 +88,18 @@
         "tilemapTile": true,
         "displayName": "dungeon_bloon_spawner"
     },
+    "tile15": {
+        "data": "hwQQABAAAABmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZg==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "dark_grass"
+    },
+    "tile16": {
+        "data": "hwQQABAAAABmZmZmZmZmZmZmZmZvZmZmZsxmZmZmZmZmzGZmZmbGZmZmZsxmZmZmZmZmzGa7ZmZma2ZmZrtmZmZmZmZmZmZmZmb2b2ZmZmxmZvZvxmZmZmZmZmZmZmZmxmZmZmZm/2ZmZmZmbGb/ZmZmu2ZmZmZmZma7ZmZmZmZmZmZmZmZmZg==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "dark_grass_with_gravel"
+    },
     "level2": {
         "id": "level2",
         "mimeType": "application/mkcd-tilemap",
@@ -233,6 +245,34 @@
             "sprites.dungeon.floorDark3"
         ],
         "displayName": "dark_dungeons"
+    },
+    "level9": {
+        "id": "level9",
+        "mimeType": "application/mkcd-tilemap",
+        "data": "MTAxMDAwMTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMA==",
+        "tileset": [
+            "myTiles.transparency16"
+        ],
+        "displayName": "level9"
+    },
+    "level10": {
+        "id": "level10",
+        "mimeType": "application/mkcd-tilemap",
+        "data": "MTAxNDAwMGYwMDAxMDIwMjAyMDIwMjAyMDIwNTAyMDcwMjAyMDIwMzAyMDIwMjAxMDIwMjAyMDUwMjAzMDIwMjAyMDIwMjAyMDIwMjAyMDIwMjA2MDIwMjAyMDQwNDA2MDkwMjAyMDEwMjAyMDIwMzAyMDcwMjAyMDIwMjAyMGEwMjAyMDQwNDAyMDIwODA0MDQwNDA0MDIwMjAyMDIwMjAxMDIwMjAyMDIwMzAyMDQwMjAyMDIwNDAzMDIwNDA5MDIwMjAyMDQwNDA0MDIwMTAyMDIwMjA0MDQwNzA4MDQwMjAyMDQwNDA2MDUwNDA0MGEwNDAyMDIwMjAyMDEwNTA0MDIwNDA0MDIwMjAyMDQwNDAyMDQwMzAyMDQwNDAyMDMwMjA0MDQwNDA0MDQwNjAyMDIwMzAyMDQwNDA0MDIwMjAyMDQwMjAyMDQwNDAyMDIwMjA0MDgwMjAyMDIwNDA0MDgwNDA2MDIwNDA0MDQwMjA1MDIwMjAzMDIwNDA0MDQwNDA0MDQwMTAyMDQwNDA0MDQwNjA0MDIwMjA2MDIwMjAyMDIwMjAyMDcwMjAyMDIwMjAyMDIwMjAyMDIwNDAyMDQwNDA0MDIwOTAyMDIwNTAyMDIwMjA2MDIwNTAyMDEwMjA0MDQwMjAyMDIwNDA0MDQwNDA0MDQwNDA0MDQwMjAyMDIwMjAyMDQwNDAyMDIwMjA3MDIwMjAyMDIwMjAyMDIwMjA0MDQwNDA0MDQwNDA0MDIwMjAxMDIwMjA1MDIwMjAyMDcwMjAyMDIwMjBhMDIwMjAyMDIwMjAzMDIwMjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMA==",
+        "tileset": [
+            "myTiles.transparency16",
+            "sprites.castle.tileDarkGrass2",
+            "myTiles.tile15",
+            "sprites.castle.saplingOak",
+            "myTiles.tile16",
+            "sprites.castle.saplingPine",
+            "sprites.castle.tileDarkGrass1",
+            "sprites.castle.tileDarkGrass3",
+            "sprites.castle.shrub",
+            "sprites.castle.rock0",
+            "sprites.castle.rock1"
+        ],
+        "displayName": "bloons_forest_map"
     },
     "*": {
         "mimeType": "image/x-mkcd-f4",

@@ -63,7 +63,7 @@ function start_cut () {
 function set_variables () {
     in_game = false
     in_round = false
-    max_map = 2
+    max_map = 3
     current_map = 0
     round_number = 1
     game_lose_on_0_lives = true
@@ -200,6 +200,10 @@ function update_dart_monkey (tower: Sprite) {
     sprites.setDataNumber(sprite_projectile, "health", sprites.readDataNumber(tower, "dart_health"))
     sprites.setDataSprite(sprite_projectile, "parent", tower)
     spriteutils.setVelocityAtAngle(sprite_projectile, target_angle, sprites.readDataNumber(tower, "dart_speed"))
+}
+function set_bloons_forest_map () {
+    scene.setBackgroundColor(6)
+    tiles.setTilemap(tilemap`bloons_forest_map`)
 }
 function get_projectile_image (_type: number, angle: number) {
     return projectile_images[_type][Math.idiv(angle, 360 / dart_angle_precision) % dart_angle_precision]
@@ -367,7 +371,12 @@ function get_farthest_along_path_bloon (tower: Sprite) {
 }
 function select_map () {
     current_map = 0
-    map_names = ["Walk in the Park", "Beautiful Beach", "Dark Dungeons"]
+    map_names = [
+    "Walk in the Park",
+    "Beautiful Beach",
+    "Dark Dungeons",
+    "Bloon's Forest"
+    ]
     set_map(current_map)
     sprite_map_title = sprites.create(assets.image`map_title_template`, SpriteKind.Player)
     sprite_map_title.left = 0
@@ -448,6 +457,81 @@ function enable_cursor_movement (en: boolean) {
 function set_dark_dungeons () {
     scene.setBackgroundColor(12)
     tiles.setTilemap(tilemap`dark_dungeons`)
+}
+function finish_bloons_forest_map () {
+    land_tiles = [
+    assets.tile`dark_grass`,
+    sprites.castle.tileDarkGrass3,
+    sprites.castle.tileDarkGrass1,
+    sprites.castle.tileDarkGrass2
+    ]
+    water_tiles = []
+    spawn_locations = [tiles.getTileLocation(0, 2), tiles.getTileLocation(0, 8)]
+    bloon_paths = []
+    bloon_paths.push(TilemapPath.create_path([
+    tiles.getTileLocation(0, 2),
+    tiles.getTileLocation(1, 2),
+    tiles.getTileLocation(1, 3),
+    tiles.getTileLocation(2, 3),
+    tiles.getTileLocation(2, 5),
+    tiles.getTileLocation(3, 5),
+    tiles.getTileLocation(3, 7),
+    tiles.getTileLocation(5, 7),
+    tiles.getTileLocation(5, 6),
+    tiles.getTileLocation(6, 6),
+    tiles.getTileLocation(6, 3),
+    tiles.getTileLocation(9, 3),
+    tiles.getTileLocation(9, 5),
+    tiles.getTileLocation(10, 5),
+    tiles.getTileLocation(10, 6),
+    tiles.getTileLocation(11, 6),
+    tiles.getTileLocation(11, 7),
+    tiles.getTileLocation(13, 7),
+    tiles.getTileLocation(13, 5),
+    tiles.getTileLocation(14, 5),
+    tiles.getTileLocation(14, 4),
+    tiles.getTileLocation(16, 4),
+    tiles.getTileLocation(16, 6),
+    tiles.getTileLocation(17, 6),
+    tiles.getTileLocation(17, 8),
+    tiles.getTileLocation(18, 8),
+    tiles.getTileLocation(18, 11),
+    tiles.getTileLocation(17, 11),
+    tiles.getTileLocation(17, 12),
+    tiles.getTileLocation(16, 12),
+    tiles.getTileLocation(16, 13),
+    tiles.getTileLocation(10, 13),
+    tiles.getTileLocation(10, 12),
+    tiles.getTileLocation(2, 12),
+    tiles.getTileLocation(2, 11),
+    tiles.getTileLocation(0, 11)
+    ]))
+    bloon_paths.push(TilemapPath.create_path([
+    tiles.getTileLocation(0, 8),
+    tiles.getTileLocation(1, 8),
+    tiles.getTileLocation(1, 7),
+    tiles.getTileLocation(5, 7),
+    tiles.getTileLocation(5, 9),
+    tiles.getTileLocation(10, 9),
+    tiles.getTileLocation(10, 8),
+    tiles.getTileLocation(11, 8),
+    tiles.getTileLocation(11, 7),
+    tiles.getTileLocation(13, 7),
+    tiles.getTileLocation(13, 9),
+    tiles.getTileLocation(16, 9),
+    tiles.getTileLocation(16, 8),
+    tiles.getTileLocation(18, 8),
+    tiles.getTileLocation(18, 11),
+    tiles.getTileLocation(17, 11),
+    tiles.getTileLocation(17, 12),
+    tiles.getTileLocation(16, 12),
+    tiles.getTileLocation(16, 13),
+    tiles.getTileLocation(10, 13),
+    tiles.getTileLocation(10, 12),
+    tiles.getTileLocation(2, 12),
+    tiles.getTileLocation(2, 11),
+    tiles.getTileLocation(0, 11)
+    ]))
 }
 // round_number = 0
 // round_code = ""
@@ -571,7 +655,10 @@ function finish_tilemap () {
     sprites.dungeon.greenOuterEast2,
     sprites.dungeon.greenOuterSouth2,
     sprites.dungeon.greenOuterWest2,
-    assets.tile`dungeon_bloon_spawner`
+    assets.tile`dungeon_bloon_spawner`,
+    sprites.castle.saplingOak,
+    sprites.castle.saplingPine,
+    sprites.castle.shrub
     ]) {
         for (let location of tiles.getTilesByType(tile)) {
             tiles.setWallAt(location, true)
@@ -754,6 +841,8 @@ function set_map (index: number) {
         set_beautiful_beach_map()
     } else if (index == 2) {
         set_dark_dungeons()
+    } else if (index == 3) {
+        set_bloons_forest_map()
     }
 }
 function bloon_hp_to_speed (hp: number) {
@@ -918,6 +1007,8 @@ function finish_map_loading (index: number) {
         finish_beautiful_beach_map()
     } else if (index == 2) {
         finish_dark_dungeons()
+    } else if (index == 3) {
+        finish_bloons_forest_map()
     }
 }
 function is_overlapping_kind (target: Sprite, kind: number) {
