@@ -63,7 +63,7 @@ function start_cut () {
 function set_variables () {
     in_game = false
     in_round = false
-    max_map = 3
+    max_map = 4
     current_map = 0
     round_number = 1
     game_lose_on_0_lives = true
@@ -375,7 +375,8 @@ function select_map () {
     "Walk in the Park",
     "Beautiful Beach",
     "Dark Dungeons",
-    "Bloon's Forest"
+    "Bloon's Forest",
+    "2D Under the Sea"
     ]
     set_map(current_map)
     sprite_map_title = sprites.create(assets.image`map_title_template`, SpriteKind.Player)
@@ -533,6 +534,10 @@ function finish_bloons_forest_map () {
     tiles.getTileLocation(0, 11)
     ]))
 }
+function set_2d_under_the_sea_map () {
+    scene.setBackgroundColor(9)
+    tiles.setTilemap(tilemap`2d_under_the_sea`)
+}
 // round_number = 0
 // round_code = ""
 // 
@@ -634,9 +639,6 @@ function finish_tilemap () {
     sprites.castle.rock0,
     sprites.castle.rock1,
     sprites.castle.rock2,
-    sprites.swamp.swampTile2,
-    sprites.swamp.swampTile3,
-    sprites.swamp.swampTile0,
     sprites.dungeon.greenOuterNorthWest,
     sprites.dungeon.greenOuterNorth0,
     sprites.dungeon.greenOuterNorthEast,
@@ -658,7 +660,9 @@ function finish_tilemap () {
     assets.tile`dungeon_bloon_spawner`,
     sprites.castle.saplingOak,
     sprites.castle.saplingPine,
-    sprites.castle.shrub
+    sprites.castle.shrub,
+    sprites.builtin.oceanSand2,
+    sprites.builtin.oceanDepths1
     ]) {
         for (let location of tiles.getTilesByType(tile)) {
             tiles.setWallAt(location, true)
@@ -684,6 +688,19 @@ function set_dart_data__tower_type_basic_inc_best_price_mul_speed (tower: Sprite
 }
 function hide_tower_range (tower: Sprite) {
     sprites.readDataSprite(tower, "tower_range_shadow").destroy()
+}
+function finish_2d_under_the_sea () {
+    land_tiles = [assets.tile`bubbles`]
+    water_tiles = []
+    spawn_locations = [tiles.getTileLocation(0, 3)]
+    bloon_paths = [TilemapPath.create_path([
+    tiles.getTileLocation(0, 3),
+    tiles.getTileLocation(16, 3),
+    tiles.getTileLocation(16, 8),
+    tiles.getTileLocation(3, 8),
+    tiles.getTileLocation(3, 13),
+    tiles.getTileLocation(19, 13)
+    ])]
 }
 function finish_walk_in_the_park_map () {
     land_tiles = [
@@ -843,6 +860,8 @@ function set_map (index: number) {
         set_dark_dungeons()
     } else if (index == 3) {
         set_bloons_forest_map()
+    } else if (index == 4) {
+        set_2d_under_the_sea_map()
     }
 }
 function bloon_hp_to_speed (hp: number) {
@@ -1009,6 +1028,8 @@ function finish_map_loading (index: number) {
         finish_dark_dungeons()
     } else if (index == 3) {
         finish_bloons_forest_map()
+    } else if (index == 4) {
+        finish_2d_under_the_sea()
     }
 }
 function is_overlapping_kind (target: Sprite, kind: number) {

@@ -34,6 +34,8 @@ namespace myTiles {
     export const tile15 = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const tile16 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile17 = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
@@ -222,6 +224,43 @@ namespace myTiles {
 . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . 
 `, [myTiles.transparency16,sprites.castle.tileDarkGrass2,myTiles.tile15,sprites.castle.saplingOak,myTiles.tile16,sprites.castle.saplingPine,sprites.castle.tileDarkGrass1,sprites.castle.tileDarkGrass3,sprites.castle.shrub,sprites.castle.rock0,sprites.castle.rock1], TileScale.Sixteen);
+            case "level11":
+            case "level11":return tiles.createTilemap(hex`1000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`, img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`, [myTiles.transparency16], TileScale.Sixteen);
+            case "2d_under_the_sea":
+            case "level12":return tiles.createTilemap(hex`14000f0001010303010103010103030101030101010101010101070601010d0101070601010d010101010101010101010101010101010101010101010101010101050101010b0101050101010b01080a01010303020202020202020202020202020202060101070201010303010103010103030101030101010101010101070601010d0101070601010d010101010101010101010101010101010101010101010101010103030101010c0e010501010b0101050101010303020601010702020202020202020202020202020201010101010103010103030101030101030301010101010101010d0101070601010d0101070601010101010101010101010101010101010101010101030308090a010b01010c0f0e0101010b010101010404040404040404040404040404040404040404`, img`
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+`, [myTiles.transparency16,myTiles.tile6,sprites.builtin.oceanSand2,myTiles.tile17,sprites.builtin.oceanDepths1,sprites.swamp.swampTile3,sprites.builtin.oceanSand3,sprites.builtin.oceanSand1,sprites.swamp.swampTile0,sprites.swamp.swampTile1,sprites.swamp.swampTile2,sprites.builtin.coral0,sprites.builtin.coral1,sprites.builtin.oceanSand0,sprites.builtin.coral2,sprites.builtin.coral4], TileScale.Sixteen);
         }
         return null;
     })
@@ -261,6 +300,8 @@ namespace myTiles {
             case "tile15":return tile15;
             case "dark_grass_with_gravel":
             case "tile16":return tile16;
+            case "bubbles":
+            case "tile17":return tile17;
         }
         return null;
     })
